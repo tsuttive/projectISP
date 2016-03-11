@@ -6,7 +6,7 @@ var GameLayer = cc.LayerColor.extend({
     this.guage.setPosition(new cc.Point(400,150));
     this.addChild(this.guage);
     this.tap = new Tap();
-    this.tap.setPosition(new cc.Point(200,150));
+    this.tap.setPosition(new cc.Point(200,135));
     this.addChild(this.tap);
     return true;
   }
