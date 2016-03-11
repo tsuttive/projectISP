@@ -13,6 +13,8 @@
 
     "jsList" : [
         "src/resource.js",
-        "src/GameLayer.js"
+        "src/GameLayer.js",
+        "src/Guage.js",
+        "src/Tap.js"
     ]
 }
