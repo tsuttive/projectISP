@@ -4,6 +4,6 @@ var Guage = cc.Sprite.extend({
         this._super();
         this.initWithFile('res/Mechanic/guage.jpg');
 
-    },
+    }
 
 });

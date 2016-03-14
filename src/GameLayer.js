@@ -1,4 +1,6 @@
 var GameLayer = cc.LayerColor.extend({
+  var: mainHeroHp = 0,
+  var: mainMonsterHp = 0,
   init: function() {
     this._super( new cc.Color( 127, 127, 127, 255 ) );
     this.setPosition( new cc.Point( 0, 0 ) );
@@ -11,6 +13,21 @@ var GameLayer = cc.LayerColor.extend({
     this.tap.scheduleUpdate();
     this.addKeyboardHandlers();
     this.scheduleUpdate();
+    this.hero = new Hero();
+    this.monster = new Monster();
+    this.addChild(this.hero);
+    this.addChild(this.monster);
+    mainHeroHp  = this.hero.getHeroHp();
+    mainMonsterHp = this.monster.getMonsterHp();
+
+    this.heroLabel = cc.LabelTTF.create( 'HP: '+mainHeroHp, 'Arial', 40 );
+    this.heroLabel.setPosition( new cc.Point( 200, 500 ) );
+    this.addChild(this.heroLabel);
+
+    this.monsterLabel = cc.LabelTTF.create( 'HP: '+mainMonsterHp, 'Arial', 40 );
+    this.monsterLabel.setPosition( new cc.Point( 600, 500 ) );
+    this.addChild(this.monsterLabel);
+
     return true;
   },
 

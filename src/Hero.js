@@ -1,3 +1,12 @@
-/**
- * Created by babe on 3/14/2016.
- */
+var Hero = cc.Sprite.extend({
+    var: heroHp = 100,
+    ctor: function() {
+        this._super();
+
+    },
+    getHeroHp: function() {
+        return heroHp;
+    }
+
+
+})
