@@ -8,7 +8,7 @@ var GameLayer = cc.LayerColor.extend({
     this.guage.setPosition(new cc.Point(400,150));
     this.addChild(this.guage);
     this.tap = new Tap();
-    this.tap.setPosition(new cc.Point(200,150));
+    this.tap.setPosition(new cc.Point(40,150));
     this.addChild(this.tap);
     this.tap.scheduleUpdate();
     this.addKeyboardHandlers();
@@ -17,8 +17,8 @@ var GameLayer = cc.LayerColor.extend({
     this.monster = new Monster();
     this.addChild(this.hero);
     this.addChild(this.monster);
-    mainHeroHp  = this.hero.getHeroHp();
-    mainMonsterHp = this.monster.getMonsterHp();
+    mainHeroHp  = this.hero.getHp();
+    mainMonsterHp = this.monster.getMHp();
 
     this.heroLabel = cc.LabelTTF.create( 'HP: '+mainHeroHp, 'Arial', 40 );
     this.heroLabel.setPosition( new cc.Point( 200, 500 ) );
@@ -55,9 +55,45 @@ var GameLayer = cc.LayerColor.extend({
       }
     }, this);
   },
+  setMonsterHp: function(newHp) {
+    this.monster.setMHp(newHp);
+    mainMonsterHp = this.monster.getMHp();
+    this.monsterLabel.setString('HP: '+mainMonsterHp);
+  },
+  setHeroHp: function (newHp) {
+    this.hero.setHp(newHp);
+    mainHeroHp = this.hero.getHp();
+    this.heroLabel.setString('HP: '+mainHeroHp);
+  },
     update: function(dt) {
 
-    }
+      if(this.monster.mcheck()) {
+        this.setMonsterHp(mainMonsterHp -= this.hero.getPower());
+        this.tap.setPosition(new cc.Point(40,150));
+      }
+      if(this.hero.hcheck()) {
+        this.setHeroHp(mainHeroHp -= this.monster.getPower());
+        this.tap.setPosition(new cc.Point(40,150));
+      }
+
+      if (this.tap.speed == 0 && this.tap.closeTo(this.guage)==true) {
+        this.monster.mGetAtked();
+      }
+      else if(this.tap.speed == 0 && this.tap.closeTo(this.guage)==false){
+        this.hero.hGetAtked();
+        console.log('asd');
+      }
+
+      if (this.monster.isDead()) {
+        this.setMonsterHp(20);
+        this.tap.setSpeed(this.tap.getSpeed()+10);
+      }
+
+      if (this.hero.isDead()) {
+        this.setHeroHp(20);
+      }
+    },
+
 });
 
 var StartScene = cc.Scene.extend({

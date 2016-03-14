@@ -1,12 +1,37 @@
 var Hero = cc.Sprite.extend({
-    var: heroHp = 100,
+    var: heroHp = 20,
+    var: heroPower = 10,
+    var: checkHAtk = 0,
     ctor: function() {
         this._super();
 
     },
-    getHeroHp: function() {
+    getHp: function() {
         return heroHp;
+    },
+    setHp: function(newHp) {
+        heroHp = newHp;
+    },
+    getPower: function () {
+        return heroPower;
+    },
+    setPower: function(newPower) {
+        heroPower = newPower;
+    },
+    hcheck: function() {
+        if (checkHAtk==1){
+            checkHAtk = 0;
+            return true;
+        } else {
+            return false;
+        }
+    },
+    hGetAtked: function() {
+        checkHAtk = 1;
+    },
+    isDead: function() {
+        if (heroHp<=0)
+            return true;
+        else false;
     }
-
-
-})
+});

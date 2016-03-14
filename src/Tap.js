@@ -27,8 +27,22 @@ var Tap = cc.Sprite.extend({
     closeTo: function (obj) {
         var myPos = this.getPosition();
         var oPos = obj.getPosition();
-        return ( ( Math.abs(myPos.x - oPos.x) <= 30 ) &&
-        ( Math.abs(myPos.y - oPos.y) <= 30 ) );
+        if (( ( Math.abs(myPos.x - oPos.x) <= 10 ) &&
+        ( Math.abs(myPos.y - oPos.y) <= 20 ) )){
+            return true;
+        } else {
+            return false;
+        }
     },
+    setSpeed: function (newSpeed) {
+        this.speed = newSpeed;
+    },
+    getSpeed: function () {
+        return this.speed;
+    },
+    rePosition: function() {
+        this.tap.setPosition(new cc.Point(40,150));
+    }
+
 
 });

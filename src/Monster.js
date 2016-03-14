@@ -1,10 +1,38 @@
 var Monster = cc.Sprite.extend({
-    var: monsterHp = 300,
+    var: monsterHp = 20,
+    var: monsterPower = 10,
+    var: checkMAtk = 0,
     ctor: function() {
         this._super();
 
     },
-    getMonsterHp: function() {
+    getMHp: function() {
         return monsterHp;
-}
-})
+    },
+    setMHp: function(newHp) {
+       monsterHp = newHp;
+    },
+    getPower: function () {
+        return monsterPower;
+    },
+    setPower: function(newPower) {
+        monsterPower = newPower;
+    },
+    mcheck: function() {
+        if (checkMAtk==1){
+            checkMAtk = 0;
+            return true;
+        } else {
+            return false;
+        }
+    },
+    mGetAtked: function() {
+        checkMAtk = 1;
+    },
+    isDead: function() {
+        if (monsterHp<=0)
+            return true;
+
+        else false;
+    }
+});
