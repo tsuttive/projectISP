@@ -1,4 +1,7 @@
 var res = {
+    guage_jpg: "res/Mechanic/guage.jpg",
+    tap_png: "res/Mechanic/tap.png"
+
 };
 
 var g_resources = [];
