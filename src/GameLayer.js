@@ -70,10 +70,12 @@ var GameLayer = cc.LayerColor.extend({
       if(this.monster.mcheck()) {
         this.setMonsterHp(mainMonsterHp -= this.hero.getPower());
         this.tap.setPosition(new cc.Point(40,150));
+        this.tap.run();
       }
       if(this.hero.hcheck()) {
         this.setHeroHp(mainHeroHp -= this.monster.getPower());
         this.tap.setPosition(new cc.Point(40,150));
+        this.tap.run();
       }
 
       if (this.tap.speed == 0 && this.tap.closeTo(this.guage)==true) {
@@ -86,7 +88,7 @@ var GameLayer = cc.LayerColor.extend({
 
       if (this.monster.isDead()) {
         this.setMonsterHp(20);
-        this.tap.setSpeed(this.tap.getSpeed()+10);
+        this.tap.setSpeed(this.tap.getSpeed()+5);
       }
 
       if (this.hero.isDead()) {
