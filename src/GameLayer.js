@@ -88,7 +88,12 @@ var GameLayer = cc.LayerColor.extend({
 
       if (this.monster.isDead()) {
         this.setMonsterHp(20);
-        this.tap.setSpeed(this.tap.getSpeed()+5);
+          var speed = this.tap.getSpeed();
+          if (speed < 0) {
+              speed *= -1;
+          }
+
+        this.tap.setSpeed(speed+5);
       }
 
       if (this.hero.isDead()) {

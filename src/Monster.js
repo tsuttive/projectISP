@@ -34,5 +34,10 @@ var Monster = cc.Sprite.extend({
             return true;
 
         else false;
+    },
+    toAttack: function() {
+        var randomNum = Math.floor(Math.random())*(3-1)+1;
+        if (randomNum == 1) return true;
+        else return false;
     }
 });
