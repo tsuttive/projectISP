@@ -93,7 +93,7 @@ var GameLayer = cc.LayerColor.extend({
               speed *= -1;
           }
 
-        this.tap.setSpeed(speed+5);
+        this.tap.setSpeed(speed+2);
       }
 
       if (this.hero.isDead()) {
