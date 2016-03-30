@@ -1,6 +1,7 @@
 var GameLayer = cc.LayerColor.extend({
   var: mainHeroHp = 0,
   var: mainMonsterHp = 0,
+  var: stage = 1,
   init: function() {
     this._super( new cc.Color( 127, 127, 127, 255 ) );
     this.setPosition( new cc.Point( 0, 0 ) );
@@ -27,6 +28,10 @@ var GameLayer = cc.LayerColor.extend({
     this.monsterLabel = cc.LabelTTF.create( 'HP: '+mainMonsterHp, 'Arial', 40 );
     this.monsterLabel.setPosition( new cc.Point( 600, 500 ) );
     this.addChild(this.monsterLabel);
+
+    this.stageLabel = cc.LabelTTF.create( 'Stage: '+stage, 'Arial', 30 );
+    this.stageLabel.setPosition( new cc.Point( 400, 550 ) );
+    this.addChild(this.stageLabel);
 
     return true;
   },
@@ -83,21 +88,31 @@ var GameLayer = cc.LayerColor.extend({
       }
       else if(this.tap.speed == 0 && this.tap.closeTo(this.guage)==false){
         this.hero.hGetAtked();
-        console.log('asd');
       }
 
-      if (this.monster.isDead()) {
+      if (this.monster.isDead()&& stage <= 12) {
+
         this.setMonsterHp(20);
-          var speed = this.tap.getSpeed();
-          if (speed < 0) {
-              speed *= -1;
-          }
-
-        this.tap.setSpeed(speed+2);
-      }
+        this.setHeroHp(50);
+        var speed = this.tap.getSpeed();
+        if (speed < 0) {
+          speed *= -1;
+        }
+          this.tap.setSpeed(speed + 2);
+          stage++;
+          this.stageLabel.setString('Stage: ' + stage);
+        }
 
       if (this.hero.isDead()) {
-        this.setHeroHp(20);
+        this.setHeroHp(50);
+        this.setMonsterHp(20);
+        this.tap.setSpeed(defaultSpeed);
+        stage = 1;
+        this.stageLabel.setString('Stage: '+ stage);
+      }
+
+      if (stage == 13 && this.monster.isDead()) {
+        this.stageLabel.setString('Game Clear!!');
       }
     },
 

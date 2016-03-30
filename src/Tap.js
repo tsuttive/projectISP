@@ -1,5 +1,6 @@
 var Tap = cc.Sprite.extend({
     var: startSpeed = 0,
+    var: defaultSpeed = 5,
     ctor: function() {
 
         this._super();

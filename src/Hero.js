@@ -1,5 +1,5 @@
 var Hero = cc.Sprite.extend({
-    var: heroHp = 20,
+    var: heroHp = 50,
     var: heroPower = 10,
     var: checkHAtk = 0,
     ctor: function() {
