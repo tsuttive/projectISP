@@ -1,6 +1,8 @@
 var res = {
     guage_jpg: "res/Mechanic/guage.jpg",
-    tap_png: "res/Mechanic/tap.png"
+    tap_png: "res/Mechanic/tap.png",
+    attackButton_jpg: "res/Mechanic/AttackButton.jpg",
+    spButton_jpg: "res/Mechanic/SPButton.jpg"
 
 };
 
