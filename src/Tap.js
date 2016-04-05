@@ -2,7 +2,6 @@ var Tap = cc.Sprite.extend({
     var: startSpeed = 0,
     var: defaultSpeed = 5,
     ctor: function() {
-
         this._super();
         this.initWithFile('res/Mechanic/tap.png');
         this.speed = 5
@@ -23,6 +22,7 @@ var Tap = cc.Sprite.extend({
         this.speed = 0;
     },
     run: function() {
+        this.setStartSpeed();
         this.speed = startSpeed;
     },
     closeTo: function (obj) {
@@ -43,6 +43,12 @@ var Tap = cc.Sprite.extend({
     },
     rePosition: function() {
         this.tap.setPosition(new cc.Point(40,150));
+    },
+    setStartSpeed: function() {
+        var random = Math.round(Math.random());
+        if (random == 0) {
+            startSpeed *= -1;
+        }
     }
 
 

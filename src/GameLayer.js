@@ -4,6 +4,8 @@ var GameLayer = cc.LayerColor.extend({
     var: stage = 1,
     var: attackID = 0,
     var: SPAttackID = 0,
+    var: SPHit = 0,
+    var: countSucces= 0,
     init: function() {
         this._super( new cc.Color( 127, 127, 127, 255 ) );
         this.setPosition( new cc.Point( 0, 0 ) );
@@ -13,6 +15,7 @@ var GameLayer = cc.LayerColor.extend({
         this.addChild(this.guage);
 
         this.tap = new Tap();
+        this.tap.runAction(cc.FadeTo.create(0,0));
         this.tapRandom();
         this.addChild(this.tap);
         this.tap.scheduleUpdate();
@@ -40,6 +43,10 @@ var GameLayer = cc.LayerColor.extend({
         this.stageLabel.setPosition( new cc.Point( 400, 550 ) );
         this.addChild(this.stageLabel);
 
+        this.spLabel = cc.LabelTTF.create( 'SP charge: '+countSucces, 'Arial', 30 );
+        this.spLabel.setPosition( new cc.Point( 400, 250 ) );
+        this.addChild(this.spLabel);
+
         this.attackCommand();
         this.spAttackCommand();
 
@@ -47,12 +54,26 @@ var GameLayer = cc.LayerColor.extend({
     },
 
     onKeyDown: function( keyCode, event ) {
-        if (keyCode == cc.KEY.space){
+        if (keyCode == cc.KEY.space && attackID == 1){
+          this.tap.runAction(cc.FadeTo.create(0,0));
+            attackID = 0;
             if (this.tap.speed == 0){
                 this.tap.run();
             }else {
                 this.tap.stop();
             }
+        }
+        if(keyCode == cc.KEY.z){
+            this.tap.runAction(cc.FadeIn.create(0));
+            attackID = 1;
+        }
+        if (keyCode == cc.KEY.x && SPAttackID == 1) {
+            SPHit = 3;
+            this.tap.runAction(cc.FadeIn.create(0));
+            attackID = 1;
+            SPAttackID = 0;
+            countSucces = 0;
+            this.spLabel.setString('SP charge: '+countSucces);
         }
     },
     onKeyUp: function( keyCode, event ) {
@@ -85,6 +106,17 @@ var GameLayer = cc.LayerColor.extend({
         if(this.monster.mcheck()) {
             this.setMonsterHp(mainMonsterHp -= this.hero.getPower());
             this.tapRandom();
+            countSucces++;
+            this.spLabel.setString('SP charge: '+countSucces);
+
+            if (countSucces == 5){
+                SPAttackID = 1;
+                this.spLabel.setString('SP charge: MAX!!');
+            }
+            if (SPHit > 0) {
+                this.setHeroHp(mainHeroHp +=  this.hero.getPower()/2);
+                SPHit--;
+            }
             this.tap.run();
         }
         if(this.hero.hcheck()) {
@@ -103,7 +135,6 @@ var GameLayer = cc.LayerColor.extend({
         if (this.monster.isDead()&& stage <= 12) {
 
             this.setMonsterHp(20);
-            this.setHeroHp(50);
             var speed = this.tap.getSpeed();
             if (speed < 0) {
                 speed *= -1;
@@ -131,7 +162,8 @@ var GameLayer = cc.LayerColor.extend({
             'res/Mechanic/AttackButton.jpg',
             'res/Mechanic/AttackButtonPush.jpg',
             function() {
-                console.log("1");
+                this.tap.runAction(cc.FadeIn.create(0));
+                attackID = 1;
             }, this);
         this.attackButton = new cc.Menu (this.attack);
         this.attackButton.setPosition( new cc.Point (205, 51.5) );
@@ -143,16 +175,21 @@ var GameLayer = cc.LayerColor.extend({
             'res/Mechanic/SPButton.jpg',
             'res/Mechanic/SPButtonPush.jpg',
             function() {
-                console.log("2");
+                SPHit = 3;
             }, this);
         this.SPButton = new cc.Menu (this.SPAttack);
         this.SPButton.setPosition( new cc.Point (595, 51.5) );
         this.addChild(this.SPButton);
     },
     tapRandom: function() {
-        this.tap.setPosition(new cc.Point(Math.floor(Math.random() * (760 - 40 + 1)) + 40 ,150));
-    }
-
+        var random = Math.round(Math.random());
+        var x = 0;
+        if (random == 0)
+            x = 40;
+        else
+            x = 760;
+        this.tap.setPosition(new cc.Point(x ,150));
+    },
 });
 
 var StartScene = cc.Scene.extend({
