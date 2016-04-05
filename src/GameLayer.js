@@ -146,7 +146,7 @@ var GameLayer = cc.LayerColor.extend({
                 console.log("2");
             }, this);
         this.SPButton = new cc.Menu (this.SPAttack);
-        this.SPButton.setPosition( new cc.Point (600, 51.5) );
+        this.SPButton.setPosition( new cc.Point (595, 51.5) );
         this.addChild(this.SPButton);
     },
     tapRandom: function() {

@@ -2,8 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="8f23d363-0f89-459e-a83f-18c0b8f16c57" name="Default" comment="">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/res/Mechanic/AttackButton.jpg" afterPath="$PROJECT_DIR$/res/Mechanic/AttackButton.jpg" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/res/Mechanic/AttackButtonPush.jpg" afterPath="$PROJECT_DIR$/res/Mechanic/AttackButtonPush.jpg" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/GameLayer.js" afterPath="$PROJECT_DIR$/src/GameLayer.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/resource.js" afterPath="$PROJECT_DIR$/src/resource.js" />
     </list>
     <ignored path="HeroWannaBe.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -49,7 +50,7 @@
       <file leaf-file-name="GameLayer.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/GameLayer.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.5240066">
+            <state vertical-scroll-proportion="3.062914">
               <caret line="148" column="52" selection-start-line="148" selection-start-column="52" selection-end-line="148" selection-end-column="52" />
               <folding />
             </state>
@@ -666,12 +667,12 @@
       <workItem from="1459219687667" duration="2284000" />
       <workItem from="1459224372069" duration="3178000" />
       <workItem from="1459230869461" duration="417000" />
-      <workItem from="1459822243435" duration="4361000" />
+      <workItem from="1459822243435" duration="4651000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="30111000" />
+    <option name="totallyTimeSpent" value="30401000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-11" y="-11" width="2182" height="1402" extended-state="6" />
@@ -1108,7 +1109,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/GameLayer.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.5240066">
+        <state vertical-scroll-proportion="3.062914">
           <caret line="148" column="52" selection-start-line="148" selection-start-column="52" selection-end-line="148" selection-end-column="52" />
           <folding />
         </state>
