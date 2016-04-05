@@ -13,7 +13,7 @@ var GameLayer = cc.LayerColor.extend({
         this.addChild(this.guage);
 
         this.tap = new Tap();
-        this.tap.setPosition(new cc.Point(Math.floor(Math.random() * (760 - 40 + 1)) + 40 ,150));
+        this.tapRandom();
         this.addChild(this.tap);
         this.tap.scheduleUpdate();
 
@@ -84,12 +84,12 @@ var GameLayer = cc.LayerColor.extend({
 
         if(this.monster.mcheck()) {
             this.setMonsterHp(mainMonsterHp -= this.hero.getPower());
-            this.tap.setPosition(new cc.Point(Math.floor(Math.random() * (760 - 40 + 1)) + 40 ,150));
+            this.tapRandom();
             this.tap.run();
         }
         if(this.hero.hcheck()) {
             this.setHeroHp(mainHeroHp -= this.monster.getPower());
-            this.tap.setPosition(new cc.Point(Math.floor(Math.random() * (760 - 40 + 1)) + 40 ,150));
+            this.tapRandom();
             this.tap.run();
         }
 
@@ -129,7 +129,7 @@ var GameLayer = cc.LayerColor.extend({
     attackCommand: function() {
         this.attack = new cc.MenuItemImage(
             'res/Mechanic/AttackButton.jpg',
-            'res/Mechanic/AttackButton.jpg',
+            'res/Mechanic/AttackButtonPush.jpg',
             function() {
                 console.log("1");
             }, this);
@@ -141,13 +141,16 @@ var GameLayer = cc.LayerColor.extend({
     spAttackCommand: function() {
         this.SPAttack = new cc.MenuItemImage(
             'res/Mechanic/SPButton.jpg',
-            'res/Mechanic/SPButton.jpg',
+            'res/Mechanic/SPButtonPush.jpg',
             function() {
                 console.log("2");
             }, this);
         this.SPButton = new cc.Menu (this.SPAttack);
-        this.SPButton.setPosition( new cc.Point (605, 51.5) );
+        this.SPButton.setPosition( new cc.Point (600, 51.5) );
         this.addChild(this.SPButton);
+    },
+    tapRandom: function() {
+        this.tap.setPosition(new cc.Point(Math.floor(Math.random() * (760 - 40 + 1)) + 40 ,150));
     }
 
 });
