@@ -18,7 +18,7 @@ var Hero = cc.Sprite.extend({
     setPower: function(newPower) {
         heroPower = newPower;
     },
-    hcheck: function() {
+    heroGetAttackCheck: function() {
         if (checkHAtk==1){
             checkHAtk = 0;
             return true;
@@ -26,7 +26,7 @@ var Hero = cc.Sprite.extend({
             return false;
         }
     },
-    hGetAtked: function() {
+    heroGetAtked: function() {
         checkHAtk = 1;
     },
     isDead: function() {

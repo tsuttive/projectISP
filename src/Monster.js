@@ -18,7 +18,7 @@ var Monster = cc.Sprite.extend({
     setPower: function(newPower) {
         monsterPower = newPower;
     },
-    mcheck: function() {
+    monsterGetAttackCheck: function() {
         if (checkMAtk==1){
             checkMAtk = 0;
             return true;
@@ -26,7 +26,7 @@ var Monster = cc.Sprite.extend({
             return false;
         }
     },
-    mGetAtked: function() {
+    monsterGetAtked: function() {
         checkMAtk = 1;
     },
     isDead: function() {

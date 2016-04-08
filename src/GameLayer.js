@@ -4,43 +4,15 @@ var GameLayer = cc.LayerColor.extend({
         this._super( new cc.Color( 127, 127, 127, 255 ) );
         this.setPosition( new cc.Point( 0, 0 ) );
 
-        this.guage = new Guage();
-        this.guage.setPosition(new cc.Point(400,150));
-        this.addChild(this.guage);
-
-        this.tap = new Tap();
-        this.tap.runAction(cc.FadeTo.create(0,0));
-        this.tapRandom();
-        this.addChild(this.tap);
-        this.tap.scheduleUpdate();
-
+        this.createGuage();
+        this.createTap();
         this.addKeyboardHandlers();
         this.scheduleUpdate();
-
-        this.hero = new Hero();
-        this.monster = new Monster();
-        this.addChild(this.hero);
-        this.addChild(this.monster);
-
-        mainHeroHp  = this.hero.getHp();
-        mainMonsterHp = this.monster.getMHp();
-
-        this.heroLabel = cc.LabelTTF.create( 'HP: '+mainHeroHp, 'Arial', 40 );
-        this.heroLabel.setPosition( new cc.Point( 200, 500 ) );
-        this.addChild(this.heroLabel);
-
-        this.monsterLabel = cc.LabelTTF.create( 'HP: '+mainMonsterHp, 'Arial', 40 );
-        this.monsterLabel.setPosition( new cc.Point( 600, 500 ) );
-        this.addChild(this.monsterLabel);
-
-        this.stageLabel = cc.LabelTTF.create( 'Stage: '+stage, 'Arial', 30 );
-        this.stageLabel.setPosition( new cc.Point( 400, 550 ) );
-        this.addChild(this.stageLabel);
-
-        this.spLabel = cc.LabelTTF.create( 'SP charge: '+countSucces, 'Arial', 30 );
-        this.spLabel.setPosition( new cc.Point( 400, 250 ) );
-        this.addChild(this.spLabel);
-
+        this.createCharacter();
+        this.createHeroLabel();
+        this.createMonsterLabel();
+        this.createStageLabel();
+        this.createSPLabel();
         this.attackCommand();
         this.spAttackCommand();
 
@@ -98,18 +70,18 @@ var GameLayer = cc.LayerColor.extend({
     },
     update: function(dt) {
 
-        if(this.monster.mcheck()) {
+        if(this.monster.monsterGetAttackCheck()) {
             this.monsterGetAttacked();
         }
-        if(this.hero.hcheck()) {
+        if(this.hero.heroGetAttackCheck()) {
             this.heroGetAttacked();
         }
 
         if (this.tap.speed == 0 && this.tap.closeTo(this.guage)==true) {
-            this.monster.mGetAtked();
+            this.monster.monsterGetAtked();
         }
         else if(this.tap.speed == 0 && this.tap.closeTo(this.guage)==false){
-            this.hero.hGetAtked();
+            this.hero.heroGetAtked();
         }
 
         if (this.monster.isDead()&& stage <= 12) {
@@ -196,6 +168,46 @@ var GameLayer = cc.LayerColor.extend({
         this.tap.setSpeed(defaultSpeed);
         stage = 1;
         this.stageLabel.setString('Stage: '+ stage);
+    },
+    createGuage: function() {
+        this.guage = new Guage();
+        this.guage.setPosition(new cc.Point(400,150));
+        this.addChild(this.guage);
+    },
+    createTap: function() {
+        this.tap = new Tap();
+        this.tap.runAction(cc.FadeTo.create(0,0));
+        this.tapRandom();
+        this.addChild(this.tap);
+        this.tap.scheduleUpdate();
+    },
+    createCharacter: function() {
+        this.hero = new Hero();
+        this.monster = new Monster();
+        this.addChild(this.hero);
+        this.addChild(this.monster);
+        mainHeroHp  = this.hero.getHp();
+        mainMonsterHp = this.monster.getMHp();
+    },
+    createHeroLabel: function(){
+        this.heroLabel = cc.LabelTTF.create( 'HP: '+mainHeroHp, 'Arial', 40 );
+        this.heroLabel.setPosition( new cc.Point( 200, 500 ) );
+        this.addChild(this.heroLabel);
+    },
+    createMonsterLabel: function() {
+        this.monsterLabel = cc.LabelTTF.create( 'HP: '+mainMonsterHp, 'Arial', 40 );
+        this.monsterLabel.setPosition( new cc.Point( 600, 500 ) );
+        this.addChild(this.monsterLabel);
+    },
+    createStageLabel: function(){
+        this.stageLabel = cc.LabelTTF.create( 'Stage: '+stage, 'Arial', 30 );
+        this.stageLabel.setPosition( new cc.Point( 400, 550 ) );
+        this.addChild(this.stageLabel);
+    }
+    createSPLabel: function() {
+        this.spLabel = cc.LabelTTF.create( 'SP charge: '+countSucces, 'Arial', 30 );
+        this.spLabel.setPosition( new cc.Point( 400, 250 ) );
+        this.addChild(this.spLabel);
     }
 
 });
