@@ -1,11 +1,5 @@
 var GameLayer = cc.LayerColor.extend({
-    var: mainHeroHp = 0,
-    var: mainMonsterHp = 0,
-    var: stage = 1,
-    var: attackID = 0,
-    var: SPAttackID = 0,
-    var: SPHit = 0,
-    var: countSucces= 0,
+
     init: function() {
         this._super( new cc.Color( 127, 127, 127, 255 ) );
         this.setPosition( new cc.Point( 0, 0 ) );
@@ -50,12 +44,13 @@ var GameLayer = cc.LayerColor.extend({
         this.attackCommand();
         this.spAttackCommand();
 
+
         return true;
     },
 
     onKeyDown: function( keyCode, event ) {
         if (keyCode == cc.KEY.space && attackID == 1){
-          this.tap.runAction(cc.FadeTo.create(0,0));
+            this.tap.runAction(cc.FadeTo.create(0,0));
             attackID = 0;
             if (this.tap.speed == 0){
                 this.tap.run();
@@ -104,25 +99,10 @@ var GameLayer = cc.LayerColor.extend({
     update: function(dt) {
 
         if(this.monster.mcheck()) {
-            this.setMonsterHp(mainMonsterHp -= this.hero.getPower());
-            this.tapRandom();
-            countSucces++;
-            this.spLabel.setString('SP charge: '+countSucces);
-
-            if (countSucces == 5){
-                SPAttackID = 1;
-                this.spLabel.setString('SP charge: MAX!!');
-            }
-            if (SPHit > 0) {
-                this.setHeroHp(mainHeroHp +=  this.hero.getPower()/2);
-                SPHit--;
-            }
-            this.tap.run();
+            this.monsterGetAttacked();
         }
         if(this.hero.hcheck()) {
-            this.setHeroHp(mainHeroHp -= this.monster.getPower());
-            this.tapRandom();
-            this.tap.run();
+            this.heroGetAttacked();
         }
 
         if (this.tap.speed == 0 && this.tap.closeTo(this.guage)==true) {
@@ -133,23 +113,11 @@ var GameLayer = cc.LayerColor.extend({
         }
 
         if (this.monster.isDead()&& stage <= 12) {
-
-            this.setMonsterHp(20);
-            var speed = this.tap.getSpeed();
-            if (speed < 0) {
-                speed *= -1;
-            }
-            this.tap.setSpeed(speed + 2);
-            stage++;
-            this.stageLabel.setString('Stage: ' + stage);
+            this.passTheLevel();
         }
 
         if (this.hero.isDead()) {
-            this.setHeroHp(50);
-            this.setMonsterHp(20);
-            this.tap.setSpeed(defaultSpeed);
-            stage = 1;
-            this.stageLabel.setString('Stage: '+ stage);
+           this.gameOver();
         }
 
         if (stage == 13 && this.monster.isDead()) {
@@ -190,6 +158,46 @@ var GameLayer = cc.LayerColor.extend({
             x = 760;
         this.tap.setPosition(new cc.Point(x ,150));
     },
+    monsterGetAttacked: function() {
+        this.setMonsterHp(mainMonsterHp -= this.hero.getPower());
+        this.tapRandom();
+        if (countSucces < 5) {
+            countSucces++;
+            this.spLabel.setString('SP charge: ' + countSucces);
+        }
+        if (countSucces == 5){
+            SPAttackID = 1;
+            this.spLabel.setString('SP charge: MAX!!');
+        }
+        if (SPHit > 0) {
+            this.setHeroHp(mainHeroHp +=  this.hero.getPower()/2);
+            SPHit--;
+        }
+        this.tap.run();
+    },
+    heroGetAttacked: function() {
+        this.setHeroHp(mainHeroHp -= this.monster.getPower());
+        this.tapRandom();
+        this.tap.run();
+    },
+    passTheLevel:function() {
+        this.setMonsterHp(20);
+        var speed = this.tap.getSpeed();
+        if (speed < 0) {
+            speed *= -1;
+        }
+        this.tap.setSpeed(speed + 2);
+        stage++;
+        this.stageLabel.setString('Stage: ' + stage);
+    },
+    gameOver:function() {
+        this.setHeroHp(50);
+        this.setMonsterHp(20);
+        this.tap.setSpeed(defaultSpeed);
+        stage = 1;
+        this.stageLabel.setString('Stage: '+ stage);
+    }
+
 });
 
 var StartScene = cc.Scene.extend({
@@ -200,3 +208,11 @@ var StartScene = cc.Scene.extend({
         this.addChild( layer );
     }
 });
+
+var mainHeroHp = 0;
+var mainMonsterHp = 0;
+var stage = 1;
+var attackID = 0;
+var SPAttackID = 0;
+var SPHit = 0;
+var countSucces = 0;
