@@ -17,6 +17,7 @@
         "src/Guage.js",
         "src/Tap.js",
         "src/Hero.js",
-        "src/Monster.js"
+        "src/Monster.js",
+        "src/UpgradeLayer.js"
     ]
 }

@@ -2,6 +2,7 @@ var Monster = cc.Sprite.extend({
     var: monsterHp = 20,
     var: monsterPower = 10,
     var: checkMAtk = 0,
+
     ctor: function() {
         this._super();
 
@@ -11,6 +12,7 @@ var Monster = cc.Sprite.extend({
     },
     setMHp: function(newHp) {
        monsterHp = newHp;
+
     },
     getPower: function () {
         return monsterPower;

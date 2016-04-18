@@ -4,13 +4,13 @@ var Hero = cc.Sprite.extend({
     var: checkHAtk = 0,
     ctor: function() {
         this._super();
-
     },
     getHp: function() {
         return heroHp;
     },
     setHp: function(newHp) {
         heroHp = newHp;
+
     },
     getPower: function () {
         return heroPower;
