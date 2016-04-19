@@ -67,7 +67,6 @@ var GameLayer = cc.LayerColor.extend({
     },
 
     update: function(dt) {
-
         if(this.monster.monsterGetAttackCheck()) {
             this.monsterGetAttacked();
         }
@@ -166,16 +165,16 @@ var GameLayer = cc.LayerColor.extend({
 
     passTheLevel:function() {
         monsterMaxHp += 10;
-        upPoint += 5;
+        upPoint += 3;
         this.setMonsterHp( monsterMaxHp );
         this.setHeroHp(heroMaxHp);
         monsterPower+=5;
         this.monster.setPower(this.monster.getPower());
-        var speed = this.tap.getSpeed();
-        if (speed < 0) {
-            speed *= -1;
+        cSpeed = this.tap.getSpeed();
+        if (cSpeed < 0) {
+            cSpeed *= -1;
         }
-        this.tap.setSpeed(speed + 2);
+        this.tap.setSpeed(cSpeed + 2);
         stage++;
         this.stageLabel.setString('Stage: ' + stage);
         this.upPointLabel.setString('Upgrade Point: '+upPoint);
@@ -295,3 +294,4 @@ var SPAttackID = 0;
 var SPHit = 0;
 var upPoint = 0;
 var countSucces = 0;
+var cSpeed = 3;

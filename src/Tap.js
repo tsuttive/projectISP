@@ -4,7 +4,10 @@ var Tap = cc.Sprite.extend({
     ctor: function() {
         this._super();
         this.initWithFile('res/Mechanic/tap.png');
-        this.speed = 5
+        if (cSpeed < 0) {
+            cSpeed *= -1;
+        }
+        this.speed = cSpeed+2;
 
     },
     update: function(dt) {
