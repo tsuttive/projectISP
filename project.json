@@ -18,6 +18,7 @@
         "src/Tap.js",
         "src/Hero.js",
         "src/Monster.js",
-        "src/UpgradeLayer.js"
+        "src/UpgradeLayer.js",
+        "src/Title.js"
     ]
 }

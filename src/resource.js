@@ -12,8 +12,8 @@ var res = {
     PowerButton_jpg: "res/Mechanic/Power.jpg",
     PowerButtonPush_jpg: "res/Mechanic/PowerPush.jpg",
     BackButton_jpg: "res/Mechanic/BackButton.jpg",
-    BackButtonPush_jpg: "res/Mechanic/BackButtonPush.jpg"
-
+    BackButtonPush_jpg: "res/Mechanic/BackButtonPush.jpg",
+    title_jpg: "res/Others/HowToPlay.jpg"
 
 };
 

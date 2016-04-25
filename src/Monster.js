@@ -1,6 +1,6 @@
 var Monster = cc.Sprite.extend({
-    var: monsterHp = 20,
-    var: monsterPower = 10,
+    var: monsterHp = 30,
+    var: monsterPower = 7,
     var: checkMAtk = 0,
 
     ctor: function() {
