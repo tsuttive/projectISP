@@ -12,7 +12,7 @@ var TitleLayer = cc.LayerColor.extend({
             'res/Others/HowToPlay.jpg',
             'res/Others/HowToPlay.jpg',
             function() {
-                cc.director.runScene(new StartScene());
+                cc.director.runScene(cc.TransitionCrossFade.create(0.5,new StartScene()));
             }, this);
         this.startGame = new cc.Menu (this.SPAttack);
         this.startGame.setPosition( new cc.Point (400,300) );

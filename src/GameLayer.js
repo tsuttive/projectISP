@@ -193,7 +193,7 @@ var GameLayer = cc.LayerColor.extend({
 
     gameOver:function() {
         heroMaxHp = 100;
-        monsterMaxHp = 30;
+        monsterMaxHp = 50;
         this.setHeroHp(heroMaxHp);
         this.setMonsterHp(monsterMaxHp);
         this.hero.setPower(10);
@@ -306,7 +306,7 @@ var StartScene = cc.Scene.extend({
     }
 });
 var heroMaxHp = 100;
-var monsterMaxHp = 30;
+var monsterMaxHp = 50;
 var mainHeroHp = 0;
 var mainMonsterHp = 0;
 var stage = 1;
