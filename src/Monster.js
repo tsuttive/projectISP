@@ -5,6 +5,7 @@ var Monster = cc.Sprite.extend({
 
     ctor: function() {
         this._super();
+        this.initWithFile('res/Monster/1.jpg');
 
     },
     getMHp: function() {

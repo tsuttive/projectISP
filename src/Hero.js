@@ -1,9 +1,11 @@
 var Hero = cc.Sprite.extend({
     var: heroHp = 100,
-    var: heroPower = 10,
+    var: heroPower = 100,
     var: checkHAtk = 0,
     ctor: function() {
         this._super();
+        this.initWithFile('res/Character/1.jpg');
+
     },
     getHp: function() {
         return heroHp;

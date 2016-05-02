@@ -19,6 +19,7 @@
         "src/Hero.js",
         "src/Monster.js",
         "src/UpgradeLayer.js",
-        "src/Title.js"
+        "src/Title.js",
+        "src/GameOver.js"
     ]
 }
