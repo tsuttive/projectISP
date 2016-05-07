@@ -21,7 +21,7 @@
         "src/UpgradeLayer.js",
         "src/Title.js",
         "src/GameOver.js",
-        "src/Bg.js"
-
+        "src/Bg.js",
+        "src/effect.js"
     ]
 }

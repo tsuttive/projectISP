@@ -2,7 +2,7 @@ var GameOverLayer = cc.LayerColor.extend({
     var: current = 0,
 
     init: function () {
-        this._super(new cc.Color(127, 127, 127, 255));
+        this._super(new cc.Color(220, 20, 60, 255));
         this.setPosition(new cc.Point(0, 0));
         this.createScoreLabel();
         this.addKeyboardHandlers;

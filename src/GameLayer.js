@@ -1,7 +1,7 @@
 var GameLayer = cc.LayerColor.extend({
 
     init: function() {
-        this._super( new cc.Color( 127, 127, 127, 255 ) );
+        this._super( new cc.Color( 60, 179, 113, 255 ) );
         this.setPosition( new cc.Point( 0, 0 ) );
 
         this.addKeyboardHandlers();
@@ -19,7 +19,8 @@ var GameLayer = cc.LayerColor.extend({
         this.UpgradeCommand();
         this.createUpgradePointLabel();
         this.createSPHitLabel();
-
+        this.heroAttackEffect();
+        this.monsterAttackEffect();
     },
 
     onKeyDown: function( keyCode, event ) {
@@ -29,9 +30,12 @@ var GameLayer = cc.LayerColor.extend({
         }
         if(keyCode == cc.KEY.z){
             this.shortcutOfAttackButton();
+
+
         }
         if (keyCode == cc.KEY.x && SPAttackID == 1 ) {
             this.shortcutOfSPAttackButton();
+
 
         }
         if (keyCode == cc.KEY.c ) {
@@ -109,8 +113,7 @@ var GameLayer = cc.LayerColor.extend({
             'res/Mechanic/AttackButton.jpg',
             'res/Mechanic/AttackButtonPush.jpg',
             function() {
-                this.tap.runAction(cc.FadeIn.create(0));
-                attackID = 1;
+                this.shortcutOfAttackButton();
             }, this);
         this.attackButton = new cc.Menu (this.attack);
         this.attackButton.setPosition( new cc.Point (135, 51.5) );
@@ -123,6 +126,7 @@ var GameLayer = cc.LayerColor.extend({
             'res/Mechanic/SPButtonPush.jpg',
             function() {
                 this.shortcutOfSPAttackButton();
+
             }, this);
         this.SPButton = new cc.Menu (this.SPAttack);
         this.SPButton.setPosition( new cc.Point (402.5, 51.5) );
@@ -153,7 +157,11 @@ var GameLayer = cc.LayerColor.extend({
 
     monsterGetAttacked: function() {
         this.setMonsterHp(mainMonsterHp -= this.hero.getPower());
-        // this.heroAttackAni();
+        this.heroAttackAni();
+        this.eff1.setOpacity(255);
+        if (monsterHp > 0)
+        cc.audioEngine.playEffect('res/heroSound.mp3');
+
         this.tapRandom();
         if (countSuccess < 5 && SPHit == 0) {
             countSuccess++;
@@ -178,11 +186,16 @@ var GameLayer = cc.LayerColor.extend({
             SPHit--;
             this.spHitLabel.setString('SP Hit: '+ SPHit);
         }
+        this.eff2.setOpacity(255);
+        if (heroHp > 0)
+        cc.audioEngine.playEffect('res/monsterSound.mp3');
+        this.monsterAttackAni();
         this.tapRandom();
         this.tap.run();
     },
 
     passTheLevel:function() {
+        cc.audioEngine.playEffect('res/died.mp3');
         monsterMaxHp += 10;
         upPoint += 1;
         this.setMonsterHp( monsterMaxHp );
@@ -200,6 +213,7 @@ var GameLayer = cc.LayerColor.extend({
     },
 
     gameOver:function() {
+        cc.audioEngine.playEffect('res/died.mp3');
         heroMaxHp = 100;
         monsterMaxHp = 50;
         this.setHeroHp(heroMaxHp);
@@ -298,6 +312,10 @@ var GameLayer = cc.LayerColor.extend({
     shortcutOfAttackButton: function() {
         this.tap.setOpacity(255);
         attackID = 1;
+        this.hero.setPosition(new cc.Point(200,350));
+        this.monster.setPosition(new cc.Point (600,373));
+        this.eff1.setOpacity(0);
+        this.eff2.setOpacity(0);
     },
 
     shortcutOfSPAttackButton: function(){
@@ -308,15 +326,34 @@ var GameLayer = cc.LayerColor.extend({
         countSuccess = 0;
         this.spLabel.setString('SP charge: '+countSuccess);
         this.spHitLabel.setString('SP Hit: '+ SPHit);
+        this.hero.setPosition(new cc.Point(200,350));
+        this.monster.setPosition(new cc.Point (600,373));
+        this.eff1.setOpacity(0);
+        this.eff2.setOpacity(0);
+    },
+    
+    heroAttackAni: function() {
+        this.hero.setPosition(new cc.Point(400,350));
     },
 
+    monsterAttackAni: function () {
+        this.monster.setPosition(new cc.Point(400,373));
+    },
+    
+    heroAttackEffect: function () {
+        this.eff1 = new Effect();
+        this.eff1.setPosition(new cc.Point(500,350));
+        this.eff1.setOpacity(0);
+        this.addChild(this.eff1);
+    },
 
-    heroAttackAni: function() {
-        for (var i = 0; i < 400; i++) {
-            this.hero.setPosition(new cc.Point(200+i,350+i));
-        }
-        this.hero.setPosition(new cc.Point(200,350));
-    }
+    monsterAttackEffect: function () {
+        this.eff2 = new Effect();
+        this.eff2.setPosition(new cc.Point(300,350));
+        this.eff2.setOpacity(0);
+        this.addChild(this.eff2);
+    },
+
 });
 
 var StartScene = cc.Scene.extend({

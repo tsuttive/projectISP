@@ -20,6 +20,10 @@ var res = {
     restartPush_jpg: "res/Mechanic/RestartPush.jpg",
     music_mp3: "res/Night.mp3",
     bg_png: "res/Others/bg.png",
+    heroSound_mp3: "res/heroSound.mp3",
+    monsterSound_mp3: "res/monsterSound.mp3",
+    died_mp3: "res/died.mp3",
+    eff_png: "res/Others/eff.png"
 };
 
 var g_resources = [];
