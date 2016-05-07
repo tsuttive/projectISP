@@ -20,7 +20,8 @@
         "src/Monster.js",
         "src/UpgradeLayer.js",
         "src/Title.js",
-        "src/GameOver.js"
+        "src/GameOver.js",
+        "src/Bg.js"
 
     ]
 }

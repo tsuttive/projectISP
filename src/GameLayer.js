@@ -6,7 +6,7 @@ var GameLayer = cc.LayerColor.extend({
 
         this.addKeyboardHandlers();
         this.scheduleUpdate();
-
+        this.createBg();
         this.createGuage();
         this.createTap();
         this.createCharacter();
@@ -19,6 +19,7 @@ var GameLayer = cc.LayerColor.extend({
         this.UpgradeCommand();
         this.createUpgradePointLabel();
         this.createSPHitLabel();
+
     },
 
     onKeyDown: function( keyCode, event ) {
@@ -223,6 +224,11 @@ var GameLayer = cc.LayerColor.extend({
         this.guage = new Guage();
         this.guage.setPosition(new cc.Point(400,150));
         this.addChild(this.guage);
+    },
+    createBg: function() {
+        this.bg = new Bg();
+        this.bg.setPosition(new cc.Point(400, 420));
+        this.addChild(this.bg,0);
     },
 
     createTap: function() {

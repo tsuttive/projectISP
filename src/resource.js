@@ -19,6 +19,7 @@ var res = {
     restart_jpg: "res/Mechanic/Restart.jpg",
     restartPush_jpg: "res/Mechanic/RestartPush.jpg",
     music_mp3: "res/Night.mp3",
+    bg_png: "res/Others/bg.png",
 };
 
 var g_resources = [];
