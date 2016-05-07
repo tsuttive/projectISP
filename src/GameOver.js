@@ -5,6 +5,7 @@ var GameOverLayer = cc.LayerColor.extend({
         this._super(new cc.Color(127, 127, 127, 255));
         this.setPosition(new cc.Point(0, 0));
         this.createScoreLabel();
+        this.addKeyboardHandlers;
         if (stage-1 > current)
             current = stage-1;
         if (stage == 1) {
@@ -18,6 +19,7 @@ var GameOverLayer = cc.LayerColor.extend({
         this.replay();
         return true;
     },
+
     replay: function() {
         this.SPAttack = new cc.MenuItemImage(
             'res/Mechanic/Restart.jpg',
@@ -31,12 +33,40 @@ var GameOverLayer = cc.LayerColor.extend({
         this.startGame.setPosition( new cc.Point (400,200) );
         this.addChild(this.startGame);
     },
+
     createScoreLabel: function(){
         this.stageLabel = cc.LabelTTF.create('', 'Arial', 40);
         this.stageLabel.setPosition( new cc.Point( 400, 450 ) );
         this.addChild(this.stageLabel);
 
     },
+
+    onKeyDown: function( keyCode, event ) {
+        if (keyCode == cc.KEY.space){
+            stage = 1;
+            gameClear = false;
+            cc.director.runScene(cc.TransitionCrossFade.create(0.5,new TitleScene()));
+        }
+
+    },
+
+    onKeyUp: function( keyCode, event ) {
+
+    },
+
+    addKeyboardHandlers: function() {
+        var self = this;
+        cc.eventManager.addListener({
+            event: cc.EventListener.KEYBOARD,
+            onKeyPressed : function( keyCode, event ) {
+                self.onKeyDown( keyCode, event );
+            },
+            onKeyReleased: function( keyCode, event ) {
+                self.onKeyUp( keyCode, event );
+            }
+        }, this);
+    },
+
 });
 var GameOverScene = cc.Scene.extend({
     onEnter: function() {

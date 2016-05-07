@@ -69,6 +69,7 @@ cc.game.onStart = function(){
     // The game will be resized when browser size change
     cc.view.resizeWithBrowserSize(true);
     //load resources
+    cc.audioEngine.playMusic("res/Night.mp3",true);
     cc.LoaderScene.preload(g_resources, function () {
         cc.director.runScene(new TitleScene);
     }, this);

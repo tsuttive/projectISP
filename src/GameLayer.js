@@ -19,7 +19,6 @@ var GameLayer = cc.LayerColor.extend({
         this.UpgradeCommand();
         this.createUpgradePointLabel();
         this.createSPHitLabel();
-
     },
 
     onKeyDown: function( keyCode, event ) {
@@ -83,6 +82,12 @@ var GameLayer = cc.LayerColor.extend({
         else if(this.tap.speed == 0 && this.tap.closeTo(this.guage)==false){
             this.hero.heroGetAtked();
         }
+
+        if (countSuccess == 5){
+            SPAttackID = 1;
+            this.spLabel.setString('SP charge: MAX!!');
+        }
+
         if(stage == 13&&this.monster.isDead()){
             gameClear = true;
             this.gameOver();
@@ -147,15 +152,13 @@ var GameLayer = cc.LayerColor.extend({
 
     monsterGetAttacked: function() {
         this.setMonsterHp(mainMonsterHp -= this.hero.getPower());
+        // this.heroAttackAni();
         this.tapRandom();
         if (countSuccess < 5 && SPHit == 0) {
             countSuccess++;
             this.spLabel.setString('SP charge: ' + countSuccess);
         }
-        if (countSuccess == 5){
-            SPAttackID = 1;
-            this.spLabel.setString('SP charge: MAX!!');
-        }
+
         if (SPHit > 0) {
             if ((mainHeroHp +  this.hero.getPower()/2) > heroMaxHp){
                 this.setHeroHp(heroMaxHp);
@@ -224,7 +227,7 @@ var GameLayer = cc.LayerColor.extend({
 
     createTap: function() {
         this.tap = new Tap();
-        this.tap.runAction(cc.FadeTo.create(0,0));
+        this.tap.setOpacity(0);
         this.tapRandom();
         this.addChild(this.tap);
         this.tap.scheduleUpdate();
@@ -237,7 +240,7 @@ var GameLayer = cc.LayerColor.extend({
         this.addChild(this.monster);
         mainHeroHp  = this.hero.getHp();
         mainMonsterHp = this.monster.getMHp();
-        this.monster.setPosition(new cc.Point (600,350));
+        this.monster.setPosition(new cc.Point (600,373));
         this.hero.setPosition(new cc.Point(200,350));
     },
 
@@ -277,7 +280,7 @@ var GameLayer = cc.LayerColor.extend({
     },
 
     attackFn: function() {
-        this.tap.runAction(cc.FadeTo.create(0,0));
+        this.tap.setOpacity(0);
         attackID = 0;
         if (this.tap.speed == 0){
             this.tap.run();
@@ -287,7 +290,7 @@ var GameLayer = cc.LayerColor.extend({
     },
 
     shortcutOfAttackButton: function() {
-        this.tap.runAction(cc.FadeIn.create(0));
+        this.tap.setOpacity(255);
         attackID = 1;
     },
 
@@ -299,6 +302,14 @@ var GameLayer = cc.LayerColor.extend({
         countSuccess = 0;
         this.spLabel.setString('SP charge: '+countSuccess);
         this.spHitLabel.setString('SP Hit: '+ SPHit);
+    },
+
+
+    heroAttackAni: function() {
+        for (var i = 0; i < 400; i++) {
+            this.hero.setPosition(new cc.Point(200+i,350+i));
+        }
+        this.hero.setPosition(new cc.Point(200,350));
     }
 });
 
@@ -323,4 +334,3 @@ var upPoint = 0;
 var countSuccess = 0;
 var cSpeed = 3;
 var gameClear = false;
-
