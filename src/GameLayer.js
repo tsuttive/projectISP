@@ -146,7 +146,7 @@ var GameLayer = cc.LayerColor.extend({
         this.eff1.setOpacity(255);
 
         if (monsterHp > 0)
-            cc.audioEngine.playEffect('res/heroSound.mp3');
+            cc.audioEngine.playEffect('res/music/heroSound.mp3');
 
         this.tap.rePosition();
         
@@ -175,14 +175,14 @@ var GameLayer = cc.LayerColor.extend({
         }
         this.eff2.setOpacity(255);
         if (heroHp > 0)
-            cc.audioEngine.playEffect('res/monsterSound.mp3');
+            cc.audioEngine.playEffect('res/music/monsterSound.mp3');
         this.monsterAttackAni();
         this.tap.rePosition();
         this.tap.start();
     },
 
     passTheLevel: function () {
-        cc.audioEngine.playEffect('res/died.mp3');
+        cc.audioEngine.playEffect('res/music/died.mp3');
         upPoint += 1;
         this.setMonsterHp(monsterMaxHp + (5 * (stage + 1)));
         this.setHeroHp(heroMaxHp);
@@ -193,7 +193,7 @@ var GameLayer = cc.LayerColor.extend({
     },
 
     gameOver: function () {
-        cc.audioEngine.playEffect('res/died.mp3');
+        cc.audioEngine.playEffect('res/music/died.mp3');
         this.setHeroHp(heroMaxHp);
         this.setMonsterHp(monsterMaxHp);
         this.hero.setPower(10);
