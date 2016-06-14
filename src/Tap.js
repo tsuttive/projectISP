@@ -7,7 +7,7 @@ var Tap = cc.Sprite.extend({
         if (cSpeed < 0) {
             cSpeed *= -1;
         }
-        this.speed = cSpeed+2;
+        this.speed = cSpeed + 2;
 
     },
     update: function(dt) {
@@ -28,24 +28,24 @@ var Tap = cc.Sprite.extend({
         this.setStartSpeed();
         this.speed = startSpeed;
     },
-    closeTo: function (obj) {
+    closeTo: function(obj) {
         var myPos = this.getPosition();
         var oPos = obj.getPosition();
-        if (( ( Math.abs(myPos.x - oPos.x) <= 10 ) &&
-        ( Math.abs(myPos.y - oPos.y) <= 20 ) )){
+        if (((Math.abs(myPos.x - oPos.x) <= 10) &&
+                (Math.abs(myPos.y - oPos.y) <= 20))) {
             return true;
         } else {
             return false;
         }
     },
-    setSpeed: function (newSpeed) {
+    setSpeed: function(newSpeed) {
         this.speed = newSpeed;
     },
-    getSpeed: function () {
+    getSpeed: function() {
         return this.speed;
     },
     rePosition: function() {
-        this.tap.setPosition(new cc.Point(40,150));
+        this.tap.setPosition(new cc.Point(40, 150));
     },
     setStartSpeed: function() {
         var random = Math.round(Math.random());

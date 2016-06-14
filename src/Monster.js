@@ -12,17 +12,17 @@ var Monster = cc.Sprite.extend({
         return monsterHp;
     },
     setMHp: function(newHp) {
-       monsterHp = newHp;
+        monsterHp = newHp;
 
     },
-    getPower: function () {
+    getPower: function() {
         return monsterPower;
     },
     setPower: function(newPower) {
         monsterPower = newPower;
     },
     monsterGetAttackCheck: function() {
-        if (checkMAtk==1){
+        if (checkMAtk == 1) {
             checkMAtk = 0;
             return true;
         } else {
@@ -33,13 +33,13 @@ var Monster = cc.Sprite.extend({
         checkMAtk = 1;
     },
     isDead: function() {
-        if (monsterHp<=0)
+        if (monsterHp <= 0)
             return true;
 
         else false;
     },
     toAttack: function() {
-        var randomNum = Math.floor(Math.random())*(3-1)+1;
+        var randomNum = Math.floor(Math.random()) * (3 - 1) + 1;
         if (randomNum == 1) return true;
         else return false;
     }

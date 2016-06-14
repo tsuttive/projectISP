@@ -14,14 +14,14 @@ var Hero = cc.Sprite.extend({
         heroHp = newHp;
 
     },
-    getPower: function () {
+    getPower: function() {
         return heroPower;
     },
     setPower: function(newPower) {
         heroPower = newPower;
     },
     heroGetAttackCheck: function() {
-        if (checkHAtk==1){
+        if (checkHAtk == 1) {
             checkHAtk = 0;
             return true;
         } else {
@@ -32,7 +32,7 @@ var Hero = cc.Sprite.extend({
         checkHAtk = 1;
     },
     isDead: function() {
-        if (heroHp<=0)
+        if (heroHp <= 0)
             return true;
         else false;
     }
