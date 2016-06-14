@@ -53,8 +53,8 @@
  */
 var width = 800;
 var height = 600;
-cc.game.onStart = function(){
-    if(!cc.sys.isNative && document.getElementById("cocosLoading")) //If referenced loading.js, please remove it
+cc.game.onStart = function () {
+    if (!cc.sys.isNative && document.getElementById("cocosLoading")) //If referenced loading.js, please remove it
         document.body.removeChild(document.getElementById("cocosLoading"));
 
     // Pass true to enable retina display, on Android disabled by default to improve performance
@@ -69,7 +69,7 @@ cc.game.onStart = function(){
     // The game will be resized when browser size change
     cc.view.resizeWithBrowserSize(true);
     //load resources
-    cc.audioEngine.playMusic("res/Night.mp3",true);
+    // cc.audioEngine.playMusic("res/Night.mp3",true); // may not support in safari
     cc.LoaderScene.preload(g_resources, function () {
         cc.director.runScene(new TitleScene);
     }, this);

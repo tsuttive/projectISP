@@ -3,7 +3,6 @@ var TitleLayer = cc.LayerColor.extend({
     init: function() {
         this._super(new cc.Color(127, 127, 127, 255));
         this.setPosition(new cc.Point(0, 0));
-        //this.initWithFile('res/Others/HowToPlay.jpg');
         this.play();
         return true;
     },

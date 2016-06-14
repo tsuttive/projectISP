@@ -1,27 +1,26 @@
 {
-    "project_type": "javascript",
-
-    "debugMode" : 1,
-    "showFPS" : false,
-    "frameRate" : 60,
-    "noCache" : false,
-    "id" : "gameCanvas",
-    "renderMode" : 0,
-    "engineDir":"frameworks/cocos2d-html5",
-
-    "modules" : ["cocos2d"],
-
-    "jsList" : [
-        "src/resource.js",
-        "src/GameLayer.js",
-        "src/Guage.js",
-        "src/Tap.js",
-        "src/Hero.js",
-        "src/Monster.js",
-        "src/UpgradeLayer.js",
-        "src/Title.js",
-        "src/GameOver.js",
-        "src/Bg.js",
-        "src/effect.js"
-    ]
+  "project_type": "javascript",
+  "debugMode": 1,
+  "showFPS": false,
+  "frameRate": 60,
+  "noCache": true,
+  "id": "gameCanvas",
+  "renderMode": 0,
+  "engineDir": "frameworks/cocos2d-html5",
+  "modules": [
+    "cocos2d"
+  ],
+  "jsList": [
+    "src/resource.js",
+    "src/GameLayer.js",
+    "src/Guage.js",
+    "src/Tap.js",
+    "src/Hero.js",
+    "src/Monster.js",
+    "src/UpgradeLayer.js",
+    "src/Title.js",
+    "src/GameOver.js",
+    "src/Bg.js",
+    "src/effect.js"
+  ]
 }
