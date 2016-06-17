@@ -52,7 +52,7 @@ Benchmarks.prototype.runOne = function (benchmark) {
     return iterations;
   }
 
-  // Initialize the kernels and check the correctness status
+  // Initialize the kernels and check the correctness tapHere
   if (!benchmark.config.kernelInit()) {
     benchmark.initOk = false;
     return false;

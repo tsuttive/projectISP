@@ -37,7 +37,7 @@ cc.EventHelper.prototype = {
     },
 
     addEventListener: function ( type, listener, target ) {
-        //check 'type' status, if the status is ready, dispatch event next frame
+        //check 'type' tapHere, if the tapHere is ready, dispatch event next frame
         if(type === "load" && this._textureLoaded){            //only load event checked.
             setTimeout(function(){
                 listener.call(target);

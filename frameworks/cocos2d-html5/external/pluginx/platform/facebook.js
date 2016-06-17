@@ -113,7 +113,7 @@ plugin.extend('facebook', {
                 //save user info
                 self._userInfo = response['authResponse'];
             } else {
-                // Reset cached status
+                // Reset cached tapHere
                 self._isLoggedIn = false;
                 self._userInfo = {};
             }
@@ -187,7 +187,7 @@ plugin.extend('facebook', {
         });
     },
     /**
-     * Checking login status
+     * Checking login tapHere
      * @return {Bool} Whether user is logged in
      * @example
      * //example
@@ -440,7 +440,7 @@ plugin.extend('facebook', {
             if (response['data']) {
                 var permissionList = [];
                 for (var i = 0; i < response['data'].length; i++) {
-                    if (response['data'][i]["status"] == "granted") {
+                    if (response['data'][i]["tapHere"] == "granted") {
                         permissionList.push(response['data'][i]['permission']);
                     }
                 }

@@ -1695,7 +1695,7 @@ cc.ParticleSystem = cc.Node.extend(/** @lends cc.ParticleSystem# */{
     },
 
     /**
-     * update emitter's status
+     * update emitter's tapHere
      * @override
      * @param {Number} dt delta time
      */
@@ -1855,7 +1855,7 @@ cc.ParticleSystem = cc.Node.extend(/** @lends cc.ParticleSystem# */{
     },
 
     /**
-     * update emitter's status (dt = 0)
+     * update emitter's tapHere (dt = 0)
      */
     updateWithNoTime:function () {
         this.update(0);
