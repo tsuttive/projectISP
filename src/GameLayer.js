@@ -34,26 +34,9 @@ var GameLayer = cc.LayerColor.extend({
     },
 
     onKeyDown: function (keyCode, event) {
-        // attack
+        // isAttack
         if (keyCode == cc.KEY.z) {
-            if (tapHere) {
-                console.log("appear");
-                this.tap.stop();
-                // hero attack
-                if (this.tap.closeTo(this.guage)) {
-
-                    this.heroAttack();
-                    // monster attack
-                } else {
-                    this.monsterAttack();
-                }
-                tapHere = false;
-            } else {
-                console.log("disappear");
-                this.tap.start();
-                this.returnEffect();
-                tapHere = true;
-            }
+            this.attack();
         }
         // sp Attack
         if (keyCode == cc.KEY.x) {
@@ -84,7 +67,6 @@ var GameLayer = cc.LayerColor.extend({
     },
 
     update: function (dt) {
-
         if (countSuccess == 5) {
             this.spLabel.setString('SP charge: MAX!!');
         }
@@ -104,27 +86,27 @@ var GameLayer = cc.LayerColor.extend({
         }
     },
 
+    // FIXME: 18/6/59 press user press button, program will deley a little
     attackCommand: function () {
-        this.attack = new cc.MenuItemImage(
+        const attack = new cc.MenuItemImage(
             'res/Mechanic/AttackButton.jpg',
             'res/Mechanic/AttackButtonPush.jpg',
             function () {
-                this.returnEffect();
+                this.attack();
             }, this);
-        this.attackButton = new cc.Menu(this.attack);
+        this.attackButton = new cc.Menu(attack);
         this.attackButton.setPosition(new cc.Point(135, 51.5));
         this.addChild(this.attackButton);
     },
 
     spAttackCommand: function () {
-        this.SPAttack = new cc.MenuItemImage(
+        const SPAttack = new cc.MenuItemImage(
             'res/Mechanic/SPButton.jpg',
             'res/Mechanic/SPButtonPush.jpg',
             function () {
                 this.shortcutOfSPAttackButton();
-
             }, this);
-        this.SPButton = new cc.Menu(this.SPAttack);
+        this.SPButton = new cc.Menu(SPAttack);
         this.SPButton.setPosition(new cc.Point(402.5, 51.5));
         this.addChild(this.SPButton);
     },
@@ -139,6 +121,24 @@ var GameLayer = cc.LayerColor.extend({
         this.UpgradeButton = new cc.Menu(this.Upgrade);
         this.UpgradeButton.setPosition(new cc.Point(665, 51.5));
         this.addChild(this.UpgradeButton);
+    },
+
+    attack: function () {
+        if (tapHere) {
+            this.tap.stop();
+            // hero isAttack
+            if (this.tap.closeTo(this.guage)) {
+                this.heroAttack();
+                // monster isAttack
+            } else {
+                this.monsterAttack();
+            }
+            tapHere = false;
+        } else {
+            this.tap.start();
+            this.returnEffect();
+            tapHere = true;
+        }
     },
 
     heroAttack: function () {
