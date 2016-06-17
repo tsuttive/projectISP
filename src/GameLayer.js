@@ -16,7 +16,7 @@ var GameLayer = cc.LayerColor.extend({
         this.createSPLabel();
         this.attackCommand();
         this.spAttackCommand();
-        this.UpgradeCommand();
+        this.upgradeCommand();
         this.createUpgradePointLabel();
         this.createSPHitLabel();
         this.createHeroEffect();
@@ -50,7 +50,7 @@ var GameLayer = cc.LayerColor.extend({
 
         // debug code
         if (keyCode == cc.KEY.q) {
-            console.log(this.tap.getPositionX());
+            this.heroAttack();
         }
     },
 
@@ -75,18 +75,9 @@ var GameLayer = cc.LayerColor.extend({
             gameClear = true;
             this.gameOver();
         }
-
-        if (this.monster.isDead() && stage < 13) {
-            this.passTheLevel();
-        }
-
-
-        if (this.hero.isDead()) {
-            this.tap.rePosition()
-        }
     },
 
-    // FIXME: 18/6/59 press user press button, program will deley a little
+    // FIXME: 18/6/59 press user press button, program will delay a little
     attackCommand: function () {
         const attack = new cc.MenuItemImage(
             'res/Mechanic/AttackButton.jpg',
@@ -111,7 +102,7 @@ var GameLayer = cc.LayerColor.extend({
         this.addChild(this.SPButton);
     },
 
-    UpgradeCommand: function () {
+    upgradeCommand: function () {
         this.Upgrade = new cc.MenuItemImage(
             'res/Mechanic/UpgradeButton.jpg',
             'res/Mechanic/UpgradeButtonPush.jpg',
@@ -144,7 +135,6 @@ var GameLayer = cc.LayerColor.extend({
     heroAttack: function () {
         this.setMonsterHp(mainMonsterHp -= this.hero.getPower());
 
-
         if (countSuccess < 5 && SPHit == 0) {
             countSuccess++;
             this.spLabel.setString('SP charge: ' + countSuccess);
@@ -160,7 +150,9 @@ var GameLayer = cc.LayerColor.extend({
             this.spHitLabel.setString('SP Hit: ' + SPHit);
         }
 
-        if (monsterHp > 0)
+        if (this.monster.isDead())
+            this.passTheLevel();
+        else
             cc.audioEngine.playEffect('res/music/heroSound.mp3');
 
         this.AttackPos("hero");
@@ -168,12 +160,15 @@ var GameLayer = cc.LayerColor.extend({
 
     monsterAttack: function () {
         this.setHeroHp(mainHeroHp -= this.monster.getPower());
+
         if (SPHit > 0) {
             SPHit--;
             this.spHitLabel.setString('SP Hit: ' + SPHit);
         }
 
-        if (heroHp > 0)
+        if (this.hero.isDead())
+            this.gameOver();
+        else
             cc.audioEngine.playEffect('res/music/monsterSound.mp3');
 
         this.AttackPos("monster");
@@ -192,17 +187,22 @@ var GameLayer = cc.LayerColor.extend({
 
     gameOver: function () {
         cc.audioEngine.playEffect('res/music/died.mp3');
+
         this.setHeroHp(heroMaxHp);
         this.setMonsterHp(monsterMaxHp);
+
         this.hero.setPower(10);
         this.monster.setPower(7);
+
         countSuccess = 0;
         upPoint = 0;
         SPHit = 0;
+
         this.stageLabel.setString('Stage: ' + stage);
         this.spLabel.setString('SP charge: ' + countSuccess);
         this.upPointLabel.setString('Upgrade Point: ' + upPoint);
         this.spHitLabel.setString('SP Hit: ' + SPHit);
+
         hpUpgrade = 0;
         powerUpgrade = 0;
         cc.director.runScene(new GameOverScene());
