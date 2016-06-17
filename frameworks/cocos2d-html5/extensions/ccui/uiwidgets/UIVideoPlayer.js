@@ -187,7 +187,7 @@ ccui.VideoPlayer = ccui.Widget.extend(/** @lends ccui.VideoPlayer# */{
      * Determine whether already full screen
      */
     isFullScreenEnabled: function(){
-        cc.log("Can't know tapHere");
+        cc.log("Can't know status");
     },
 
     /**

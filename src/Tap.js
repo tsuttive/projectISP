@@ -1,20 +1,32 @@
 //noinspection JSDuplicatedDeclaration
 var Tap = cc.Sprite.extend({
+    var: timer = 0,
 
     ctor: function () {
         this._super();
         this.initWithFile('res/Mechanic/tap.png');
 
-        this.speed = tSpeed + stage + 1;
+        this.setSpeed();
     },
 
     update: function (dt) {
+        if (timer != 0) {
+            timer++;
+            if (timer % 60 == 0) {
+                if (this.speed > 0)
+                    this.speed += 0.07;
+                else
+                    this.speed -= 0.07;
+            }
+        }
+
         var pos = this.getPosition();
         if (pos.x <= 20) {
             this.speed *= -1;
         } else if (pos.x >= 780) {
             this.speed *= -1;
         }
+        console.log(this.speed);
         this.setPosition(new cc.Point(pos.x + this.speed, pos.y));
     },
 
@@ -28,14 +40,16 @@ var Tap = cc.Sprite.extend({
     },
 
     isStop: function () {
+        timer = 0;
         return (this.getOpacity() == 0) && (this.speed == 0);
     },
 
     start: function () {
-        this.rePosition();
+        timer = 1;
+        this.rePos();
         this.setOpacity(255);
-        this.speed = tSpeed + stage + 1;
-        this.setStartSpeed();
+        this.setSpeed();
+        this.setStartPos();
         this.scheduleUpdate();
     },
 
@@ -49,7 +63,14 @@ var Tap = cc.Sprite.extend({
         return this.speed;
     },
 
-    rePosition: function () {
+    /**
+     * set by using state and tSpeed
+     */
+    setSpeed: function () {
+        this.speed = tSpeed + stage + stage;
+    },
+
+    rePos: function () {
         var random = Math.round(Math.random() * 760);
         while (random <= 40) {
             random = Math.round(Math.random() * 760);
@@ -57,7 +78,7 @@ var Tap = cc.Sprite.extend({
         this.setPosition(new cc.Point(random, 150));
     },
 
-    setStartSpeed: function () {
+    setStartPos: function () {
 
         var random = Math.round(Math.random() * 2);
         if (random == 0) {

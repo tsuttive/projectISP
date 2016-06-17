@@ -716,7 +716,7 @@ cc.MenuItemSprite = cc.MenuItem.extend(/** @lends cc.MenuItemSprite# */{
     },
 
     /**
-     * return the normal tapHere image(cc.Sprite)
+     * return the normal status image(cc.Sprite)
      * @return {cc.Sprite}
      */
     getNormalImage: function () {
@@ -724,7 +724,7 @@ cc.MenuItemSprite = cc.MenuItem.extend(/** @lends cc.MenuItemSprite# */{
     },
 
     /**
-     * set the normal tapHere image(cc.Sprite)
+     * set the normal status image(cc.Sprite)
      * @param {cc.Sprite} normalImage
      */
     setNormalImage: function (normalImage) {
@@ -757,7 +757,7 @@ cc.MenuItemSprite = cc.MenuItem.extend(/** @lends cc.MenuItemSprite# */{
     },
 
     /**
-     * return the selected tapHere image(cc.Sprite) of cc.MenuItemSprite
+     * return the selected status image(cc.Sprite) of cc.MenuItemSprite
      * @return {cc.Sprite}
      */
     getSelectedImage: function () {
@@ -765,7 +765,7 @@ cc.MenuItemSprite = cc.MenuItem.extend(/** @lends cc.MenuItemSprite# */{
     },
 
     /**
-     * set the selected tapHere image(cc.Sprite)
+     * set the selected status image(cc.Sprite)
      * @param {cc.Sprite} selectedImage
      */
     setSelectedImage: function (selectedImage) {
@@ -787,7 +787,7 @@ cc.MenuItemSprite = cc.MenuItem.extend(/** @lends cc.MenuItemSprite# */{
     },
 
     /**
-     * return the disabled tapHere of cc.MenuItemSprite
+     * return the disabled status of cc.MenuItemSprite
      * @return {cc.Sprite}
      */
     getDisabledImage: function () {
@@ -795,7 +795,7 @@ cc.MenuItemSprite = cc.MenuItem.extend(/** @lends cc.MenuItemSprite# */{
     },
 
     /**
-     * set the disabled tapHere image(cc.Sprite)
+     * set the disabled status image(cc.Sprite)
      * @param {cc.Sprite} disabledImage
      */
     setDisabledImage: function (disabledImage) {
@@ -1281,7 +1281,7 @@ cc.MenuItemToggle = cc.MenuItem.extend(/** @lends cc.MenuItemToggle# */{
     },
 
     /**
-     * set the enable tapHere for cc.MenuItemToggle
+     * set the enable status for cc.MenuItemToggle
      * @param {Boolean} enabled
      */
     setEnabled: function (enabled) {

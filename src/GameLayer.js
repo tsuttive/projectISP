@@ -71,7 +71,8 @@ var GameLayer = cc.LayerColor.extend({
             this.spLabel.setString('SP charge: MAX!!');
         }
 
-        if (stage == 13 && this.monster.isDead()) {
+        // expend max level to 50
+        if (stage > 50) {
             gameClear = true;
             this.gameOver();
         }
@@ -249,7 +250,7 @@ var GameLayer = cc.LayerColor.extend({
     createTap: function () {
         this.tap = new Tap();
         this.tap.setOpacity(0);
-        this.tap.rePosition();
+        this.tap.rePos();
         this.addChild(this.tap);
     },
 
