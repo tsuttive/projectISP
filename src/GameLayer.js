@@ -57,6 +57,7 @@ var GameLayer = cc.LayerColor.extend({
         if (keyCode == cc.KEY.s) {
             console.info("----------------------------------");
             console.info("speed: " + this.tap.getSpeed());
+            console.info("tSpeed: " + tSpeed);
             console.info("hero hp: " + this.hero.getHp());
             console.info("hero power: " + this.hero.getPower());
             console.info("monster hp: " + this.monster.getHp());
@@ -184,7 +185,7 @@ var GameLayer = cc.LayerColor.extend({
         // FEATURE: 18/6/59 upgrade hp monster every level
         this.setMonsterHp(monsterHpDefault + (13 * stage));
         this.monster.setPower(this.monster.getPower());
-        
+
         this.stageLabel.setString('Stage: ' + stage);
         this.upPointLabel.setString('Upgrade Point: ' + upPoint);
     },
