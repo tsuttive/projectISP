@@ -1,99 +1,96 @@
 var UpgradeLayer = cc.LayerColor.extend({
 
-    init: function() {
+    init: function () {
         this._super(new cc.Color(127, 127, 127, 255));
         this.setPosition(new cc.Point(0, 0));
         this.GoBack();
-        this.hpUpgradeFn();
-        this.powerUpgradeFn();
+        this.hpButton();
+        this.powerButton();
+        this.speedButton();
         this.createUpgradePointLabel();
         this.createHpUpgradeLabel();
         this.createPowerUpgradeLabel();
+        this.createSpeedUpgradeLabel();
         this.addKeyboardHandlers();
     },
-    onKeyDown: function(keyCode, event) {
+
+    addKeyboardHandlers: function () {
+        var self = this;
+        cc.eventManager.addListener({
+            event: cc.EventListener.KEYBOARD,
+            onKeyPressed: function (keyCode, event) {
+                self.onKeyDown(keyCode, event);
+            }
+        }, this);
+    },
+
+    onKeyDown: function (keyCode, event) {
         if (keyCode == cc.KEY.z) {
-            this.shortcutHPUpgrade();
+            this.hpUpgrade();
         }
         if (keyCode == cc.KEY.x) {
-            this.shortcutPowerUpgrade();
+            this.powerUpgrade();
         }
         if (keyCode == cc.KEY.c) {
             cc.director.runScene(new StartScene());
         }
     },
 
-    onKeyUp: function(keyCode, event) {
-
+    setHeroHp: function (newHp) {
+        this.hero.setHp(newHp);
+        mainHeroHp = newHp;
+        this.heroLabel.setString('HP: ' + newHp);
     },
 
-    addKeyboardHandlers: function() {
-        var self = this;
-        cc.eventManager.addListener({
-            event: cc.EventListener.KEYBOARD,
-            onKeyPressed: function(keyCode, event) {
-                self.onKeyDown(keyCode, event);
-            },
-            onKeyReleased: function(keyCode, event) {
-                self.onKeyUp(keyCode, event);
-            }
-        }, this);
-    },
-
-    GoBack: function() {
+    GoBack: function () {
         this.back = new cc.MenuItemImage(
             'res/Mechanic/BackButton.jpg',
             'res/Mechanic/BackButtonPush.jpg',
-            function() {
+            function () {
                 cc.director.runScene(new StartScene());
             }, this);
         this.backButton = new cc.Menu(this.back);
         this.backButton.setPosition(new cc.Point(665, 51.5));
         this.addChild(this.backButton);
     },
-    hpUpgradeFn: function() {
-        this.hpUp = new cc.MenuItemImage(
-            'res/Mechanic/Hp.jpg',
-            'res/Mechanic/HpPush.jpg',
-            function() {
-                this.shortcutHPUpgrade();
+
+    hpButton: function () {
+        var hpUp = new cc.MenuItemImage(
+            'res/Mechanic/Upgrade.jpg',
+            'res/Mechanic/UpgradePush.jpg',
+            function () {
+                this.hpUpgrade();
             }, this);
-        this.hpUpButton = new cc.Menu(this.hpUp);
-        this.hpUpButton.setPosition(new cc.Point(665, 501.5));
-        this.addChild(this.hpUpButton);
+        var hpUpButton = new cc.Menu(hpUp);
+        hpUpButton.setPosition(new cc.Point(665, 525));
+        this.addChild(hpUpButton);
     },
-    powerUpgradeFn: function() {
-        this.powerUp = new cc.MenuItemImage(
-            'res/Mechanic/Power.jpg',
-            'res/Mechanic/PowerPush.jpg',
-            function() {
-                this.shortcutPowerUpgrade();
+
+    powerButton: function () {
+        var powerUp = new cc.MenuItemImage(
+            'res/Mechanic/Upgrade.jpg',
+            'res/Mechanic/UpgradePush.jpg',
+            function () {
+                this.powerUpgrade();
             }, this);
-        this.powerUpButton = new cc.Menu(this.powerUp);
-        this.powerUpButton.setPosition(new cc.Point(665, 301.5));
-        this.addChild(this.powerUpButton);
+        var powerUpButton = new cc.Menu(powerUp);
+        powerUpButton.setPosition(new cc.Point(665, 400));
+        this.addChild(powerUpButton);
     },
-    createUpgradePointLabel: function() {
-        this.upPointLabel = cc.LabelTTF.create('Upgrade Point: ' + upPoint, 'Arial', 30);
-        this.upPointLabel.setPosition(new cc.Point(650, 220));
-        this.addChild(this.upPointLabel);
+
+    speedButton: function () {
+        var speed = new cc.MenuItemImage(
+            'res/Mechanic/Upgrade.jpg',
+            'res/Mechanic/UpgradePush.jpg',
+            function () {
+                this.speedUpgrade();
+            }, this);
+        var speedButton = new cc.Menu(speed);
+        speedButton.setPosition(new cc.Point(665, 275));
+        this.addChild(speedButton);
     },
-    createHpUpgradeLabel: function() {
-        this.hpUpLabel = cc.LabelTTF.create('HP UPGRADED: ' + hpUpgrade, 'Arial', 30);
-        this.hpUpLabel.setPosition(new cc.Point(250, 505.5));
-        this.addChild(this.hpUpLabel);
-    },
-    createPowerUpgradeLabel: function() {
-        this.powerUpLabel = cc.LabelTTF.create('POWER UPGRADED: ' + powerUpgrade, 'Arial', 30);
-        this.powerUpLabel.setPosition(new cc.Point(250, 305.5));
-        this.addChild(this.powerUpLabel);
-    },
-    setHeroHp: function(newHp) {
-        this.hero.setHp(newHp);
-        mainHeroHp = this.hero.getHp();
-        this.heroLabel.setString('HP: ' + mainHeroHp);
-    },
-    shortcutHPUpgrade: function() {
+
+    hpUpgrade: function () {
         if (upPoint > 0) {
             hpUpgrade += 1;
             upPoint -= 1;
@@ -102,21 +99,53 @@ var UpgradeLayer = cc.LayerColor.extend({
             heroMaxHp += 5;
         }
     },
-    shortcutPowerUpgrade: function() {
+
+    powerUpgrade: function () {
         if (upPoint > 0) {
             powerUpgrade += 1;
             upPoint -= 1;
             this.upPointLabel.setString('Upgrade Point: ' + upPoint);
             this.powerUpLabel.setString('POWER UPGRADED: ' + powerUpgrade);
-            heroPower += 3;
         }
-    }
+    },
 
+    speedUpgrade: function () {
+        if (upPoint > 0) {
+            speedUpgrade += 1;
+            upPoint -= 1;
+            this.upPointLabel.setString('Upgrade Point: ' + upPoint);
+            this.speedLabel.setString('SPEED UPGRADED: ' + speedUpgrade);
+        }
+    },
+
+    createUpgradePointLabel: function () {
+        this.upPointLabel = cc.LabelTTF.create('Upgrade Point: ' + upPoint, 'Arial', 30);
+        this.upPointLabel.setPosition(new cc.Point(650, 150));
+        this.addChild(this.upPointLabel);
+    },
+
+    createHpUpgradeLabel: function () {
+        this.hpUpLabel = cc.LabelTTF.create('HP UPGRADED: ' + hpUpgrade, 'Arial', 30);
+        this.hpUpLabel.setPosition(new cc.Point(250, 525));
+        this.addChild(this.hpUpLabel);
+    },
+
+    createPowerUpgradeLabel: function () {
+        this.powerUpLabel = cc.LabelTTF.create('POWER UPGRADED: ' + powerUpgrade, 'Arial', 30);
+        this.powerUpLabel.setPosition(new cc.Point(250, 400));
+        this.addChild(this.powerUpLabel);
+    },
+
+    createSpeedUpgradeLabel: function () {
+        this.speedLabel = cc.LabelTTF.create('SPEED UPGRADED: ' + speedUpgrade, 'Arial', 30);
+        this.speedLabel.setPosition(new cc.Point(250, 275));
+        this.addChild(this.speedLabel);
+    }
 });
 
 
 var UpgradeScene = cc.Scene.extend({
-    onEnter: function() {
+    onEnter: function () {
         this._super();
         var layer = new UpgradeLayer();
         layer.init();
@@ -126,3 +155,5 @@ var UpgradeScene = cc.Scene.extend({
 
 var hpUpgrade = 0;
 var powerUpgrade = 0;
+var speedUpgrade = 0;
+

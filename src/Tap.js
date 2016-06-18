@@ -19,14 +19,12 @@ var Tap = cc.Sprite.extend({
                     this.speed -= 0.07;
             }
         }
-
         var pos = this.getPosition();
         if (pos.x <= 20) {
             this.speed *= -1;
         } else if (pos.x >= 780) {
             this.speed *= -1;
         }
-        console.log(this.speed);
         this.setPosition(new cc.Point(pos.x + this.speed, pos.y));
     },
 
@@ -56,7 +54,7 @@ var Tap = cc.Sprite.extend({
     closeTo: function (obj) {
         var myPos = this.getPositionX();
         var oPos = obj.getPositionX();
-        return (Math.abs(myPos - oPos) <= 10);
+        return (Math.abs(myPos - oPos) <= 15);
     },
 
     getSpeed: function () {
