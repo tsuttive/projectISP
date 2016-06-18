@@ -52,6 +52,17 @@ var GameLayer = cc.LayerColor.extend({
         if (keyCode == cc.KEY.q) {
             this.heroAttack();
         }
+
+        // debug code
+        if (keyCode == cc.KEY.s) {
+            console.info("----------------------------------");
+            console.info("speed: " + this.tap.getSpeed());
+            console.info("hero hp: " + this.hero.getHp());
+            console.info("hero power: " + this.hero.getPower());
+            console.info("monster hp: " + this.monster.getHp());
+            console.info("monster power: " + this.monster.getPower());
+            console.info("----------------------------------");
+        }
     },
 
     setMonsterHp: function (newHp) {
@@ -70,7 +81,6 @@ var GameLayer = cc.LayerColor.extend({
         if (countSuccess == 5) {
             this.spLabel.setString('SP charge: MAX!!');
         }
-
         // expend max level to 50
         if (stage > 50) {
             gameClear = true;
@@ -108,6 +118,7 @@ var GameLayer = cc.LayerColor.extend({
             'res/Mechanic/UpgradeButton.jpg',
             'res/Mechanic/UpgradeButtonPush.jpg',
             function () {
+                tapHere = false;
                 cc.director.runScene(new UpgradeScene());
             }, this);
         this.UpgradeButton = new cc.Menu(this.Upgrade);
@@ -141,16 +152,6 @@ var GameLayer = cc.LayerColor.extend({
             this.spLabel.setString('SP charge: ' + countSuccess);
         }
 
-        if (SPHit > 0) {
-            if ((mainHeroHp + this.hero.getPower() / 2) > heroMaxHp) {
-                this.setHeroHp(heroMaxHp);
-            } else {
-                this.setHeroHp(mainHeroHp += this.hero.getPower() / 2);
-            }
-            SPHit--;
-            this.spHitLabel.setString('SP Hit: ' + SPHit);
-        }
-
         if (this.monster.isDead())
             this.passTheLevel();
         else
@@ -177,11 +178,13 @@ var GameLayer = cc.LayerColor.extend({
 
     passTheLevel: function () {
         cc.audioEngine.playEffect('res/music/died.mp3');
-        upPoint += 1;
-        this.setMonsterHp(monsterMaxHp + (5 * (stage + 1)));
-        this.setHeroHp(heroMaxHp);
-        this.monster.setPower(this.monster.getPower());
         stage++;
+        upPoint++;
+
+        // FEATURE: 18/6/59 upgrade hp monster every level
+        this.setMonsterHp(monsterHpDefault + (13 * stage));
+        this.monster.setPower(this.monster.getPower());
+        
         this.stageLabel.setString('Stage: ' + stage);
         this.upPointLabel.setString('Upgrade Point: ' + upPoint);
     },
@@ -189,8 +192,8 @@ var GameLayer = cc.LayerColor.extend({
     gameOver: function () {
         cc.audioEngine.playEffect('res/music/died.mp3');
 
-        this.setHeroHp(heroMaxHp);
-        this.setMonsterHp(monsterMaxHp);
+        this.setHeroHp(heroHpDefault);
+        this.setMonsterHp(monsterHpDefault);
 
         this.hero.setPower(10);
         this.monster.setPower(7);
@@ -199,13 +202,15 @@ var GameLayer = cc.LayerColor.extend({
         upPoint = 0;
         SPHit = 0;
 
+        hpUpgrade = 0;
+        powerUpgrade = 0;
+
         this.stageLabel.setString('Stage: ' + stage);
         this.spLabel.setString('SP charge: ' + countSuccess);
         this.upPointLabel.setString('Upgrade Point: ' + upPoint);
         this.spHitLabel.setString('SP Hit: ' + SPHit);
 
-        hpUpgrade = 0;
-        powerUpgrade = 0;
+
         cc.director.runScene(new GameOverScene());
     },
 
@@ -259,8 +264,13 @@ var GameLayer = cc.LayerColor.extend({
         this.monster = new Monster();
         this.addChild(this.hero);
         this.addChild(this.monster);
-        mainHeroHp = this.hero.getHp();
-        mainMonsterHp = this.monster.getHp();
+        // set hp
+        this.hero.setHp(mainHeroHp);
+        this.monster.setHp(mainMonsterHp);
+        // set power
+        this.hero.setPower(mainHeroPower);
+        this.monster.setPower(mainMonsterPower);
+        // set position
         this.monster.setPosition(new cc.Point(600, 373));
         this.hero.setPosition(new cc.Point(200, 350));
     },
@@ -327,12 +337,16 @@ var StartScene = cc.Scene.extend({
 
 // variable
 var stage = 1;
-// max player hp
-var heroMaxHp = 100;
-var monsterMaxHp = 50;
-// present hp
-var mainHeroHp = 0;
-var mainMonsterHp = 0;
+// default value
+var heroHpDefault = 100;
+var heroPowerDefault = 10;
+var monsterHpDefault = 50;
+var monsterPowerDefault = 10;
+// present value
+var mainHeroHp = heroHpDefault;
+var mainHeroPower = heroPowerDefault;
+var mainMonsterHp = monsterHpDefault;
+var mainMonsterPower = monsterPowerDefault;
 // SPAttack count
 var SPHit = 0;
 // update point

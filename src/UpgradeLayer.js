@@ -1,5 +1,4 @@
 var UpgradeLayer = cc.LayerColor.extend({
-
     init: function () {
         this._super(new cc.Color(127, 127, 127, 255));
         this.setPosition(new cc.Point(0, 0));
@@ -28,9 +27,11 @@ var UpgradeLayer = cc.LayerColor.extend({
         if (keyCode == cc.KEY.z) {
             this.hpUpgrade();
         }
+
         if (keyCode == cc.KEY.x) {
             this.powerUpgrade();
         }
+
         if (keyCode == cc.KEY.c) {
             cc.director.runScene(new StartScene());
         }
@@ -96,7 +97,8 @@ var UpgradeLayer = cc.LayerColor.extend({
             upPoint -= 1;
             this.upPointLabel.setString('Upgrade Point: ' + upPoint);
             this.hpUpLabel.setString('HP UPGRADED: ' + hpUpgrade);
-            heroMaxHp += 5;
+            // FEATURE: 18/6/59 add hero when player add upgrade point
+            mainHeroHp += (3 * hpUpgrade * stage);
         }
     },
 
@@ -106,6 +108,8 @@ var UpgradeLayer = cc.LayerColor.extend({
             upPoint -= 1;
             this.upPointLabel.setString('Upgrade Point: ' + upPoint);
             this.powerUpLabel.setString('POWER UPGRADED: ' + powerUpgrade);
+            // FEATURE: 18/6/59 add power of hero when player upgrade it
+            mainHeroPower += (3 * stage);
         }
     },
 
@@ -115,6 +119,8 @@ var UpgradeLayer = cc.LayerColor.extend({
             upPoint -= 1;
             this.upPointLabel.setString('Upgrade Point: ' + upPoint);
             this.speedLabel.setString('SPEED UPGRADED: ' + speedUpgrade);
+            // FEATURE: 18/6/59 decrease speed when user update speed
+            tSpeed -= stage;
         }
     },
 
@@ -142,7 +148,6 @@ var UpgradeLayer = cc.LayerColor.extend({
         this.addChild(this.speedLabel);
     }
 });
-
 
 var UpgradeScene = cc.Scene.extend({
     onEnter: function () {
