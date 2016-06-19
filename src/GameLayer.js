@@ -21,6 +21,7 @@ var GameLayer = cc.LayerColor.extend({
         this.createSPHitLabel();
         this.createHeroEffect();
         this.createMonsterEffect();
+        this.createMuteLabel();
     },
 
     addKeyboardHandlers: function () {
@@ -46,6 +47,20 @@ var GameLayer = cc.LayerColor.extend({
         // update page
         if (keyCode == cc.KEY.c) {
             cc.director.runScene(new UpgradeScene());
+        }
+        // sound mute
+        if (keyCode == cc.KEY.m) {
+            if (sound) {
+                this.muteLabel.setString('Mute');
+                cc.audioEngine.setEffectsVolume(0);
+                cc.audioEngine.setMusicVolume(0);
+                sound = false;
+            } else {
+                this.muteLabel.setString('');
+                cc.audioEngine.setEffectsVolume(100);
+                cc.audioEngine.setMusicVolume(100);
+                sound = true;
+            }
         }
 
         // debug code
@@ -182,6 +197,8 @@ var GameLayer = cc.LayerColor.extend({
         stage++;
         upPoint++;
 
+        tSpeed = this.tap.speed;
+
         // FEATURE: 18/6/59 upgrade hp monster every level
         this.setMonsterHp(monsterHpDefault + (13 * stage));
         this.monster.setPower(this.monster.getPower());
@@ -210,7 +227,6 @@ var GameLayer = cc.LayerColor.extend({
         this.spLabel.setString('SP charge: ' + countSuccess);
         this.upPointLabel.setString('Upgrade Point: ' + upPoint);
         this.spHitLabel.setString('SP Hit: ' + SPHit);
-
 
         cc.director.runScene(new GameOverScene());
     },
@@ -312,6 +328,13 @@ var GameLayer = cc.LayerColor.extend({
         this.addChild(this.upPointLabel);
     },
 
+    createMuteLabel: function () {
+        this.muteLabel = cc.LabelTTF.create('', 'Arial', 20);
+        this.muteLabel.setPosition(new cc.Point(width - 50, height - 50));
+        this.muteLabel.setColor(cc.color(255, 0, 0));
+        this.addChild(this.muteLabel);
+    },
+
     createHeroEffect: function () {
         this.eff1 = new Effect();
         this.eff1.setPosition(new cc.Point(500, 350));
@@ -356,7 +379,9 @@ var upPoint = 0;
 var countSuccess = 0;
 // object speed
 var tSpeed = 1;
-// 'z' tapHere, true = tap is appear; otherwise tap disappear
+// 'attack button' tapHere, true = tap is appear; otherwise tap disappear
 var tapHere = false;
+// is sound or mute
+var sound = true;
 // is game clear
 var gameClear = false;
