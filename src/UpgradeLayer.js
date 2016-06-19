@@ -100,7 +100,7 @@ var UpgradeLayer = cc.LayerColor.extend({
             mainHeroHp.toFixed(0);
 
             this.upPointLabel.setString('Upgrade Point: ' + upPoint);
-            this.hpUpLabel.setString('HP UPGRADED(' + mainHeroHp + '+' + (3 * (hpUpgrade + 1) * stage) + '): ' + hpUpgrade);
+            this.hpUpLabel.setString('HP (' + mainHeroHp + '+' + (3 * (hpUpgrade + 1) * stage) + '): ' + hpUpgrade);
         }
     },
 
@@ -116,7 +116,7 @@ var UpgradeLayer = cc.LayerColor.extend({
             mainHeroPower.toFixed(2);
 
             this.upPointLabel.setString('Upgrade Point: ' + upPoint);
-            this.powerUpLabel.setString('POWER UPGRADED(' + mainHeroPower + '+' + power + '): ' + powerUpgrade);
+            this.powerUpLabel.setString('POWER (' + mainHeroPower + '+' + power + '): ' + powerUpgrade);
         }
     },
 
@@ -128,7 +128,7 @@ var UpgradeLayer = cc.LayerColor.extend({
             Tap.decreaseSpeed();
 
             this.upPointLabel.setString('Upgrade Point: ' + upPoint);
-            this.speedLabel.setString('SPEED UPGRADED(' + (Tap.getSpeed() - 1).toFixed(0) + '-1): ' + speedUpgrade);
+            this.speedLabel.setString('SPEED (' + (Tap.getSpeed() - 1).toFixed(0) + '-1): ' + speedUpgrade);
         }
     },
 
@@ -139,22 +139,22 @@ var UpgradeLayer = cc.LayerColor.extend({
     },
 
     createHpUpgradeLabel: function () {
-        this.hpUpLabel = cc.LabelTTF.create('HP UPGRADED(' + Hero.getHp() + '+' + (3 * (hpUpgrade + 1) * stage) + '): ' + hpUpgrade, 'Arial', 30);
-        this.hpUpLabel.setPosition(new cc.Point(250, 525));
+        this.hpUpLabel = cc.LabelTTF.create('HP (' + Hero.getHp() + '+' + (3 * (hpUpgrade + 1) * stage) + '): ' + hpUpgrade, 'Arial', 30);
+        this.hpUpLabel.setPosition(new cc.Point(300, 525));
         this.addChild(this.hpUpLabel);
     },
 
     createPowerUpgradeLabel: function () {
         const power = ((3 / 2) * ((powerUpgrade + 1) / 10) * (stage / 4)).toFixed(3);
 
-        this.powerUpLabel = cc.LabelTTF.create('POWER UPGRADED(' + Hero.getPower() + '+' + power + '): ' + powerUpgrade, 'Arial', 30);
-        this.powerUpLabel.setPosition(new cc.Point(250, 400));
+        this.powerUpLabel = cc.LabelTTF.create('POWER (' + Hero.getPower() + '+' + power + '): ' + powerUpgrade, 'Arial', 30);
+        this.powerUpLabel.setPosition(new cc.Point(300, 400));
         this.addChild(this.powerUpLabel);
     },
 
     createSpeedUpgradeLabel: function () {
-        this.speedLabel = cc.LabelTTF.create('SPEED UPGRADED(' + Tap.getSpeed() + '-1): ' + speedUpgrade, 'Arial', 30);
-        this.speedLabel.setPosition(new cc.Point(250, 275));
+        this.speedLabel = cc.LabelTTF.create('SPEED (' + Tap.getSpeed() + '-1): ' + speedUpgrade, 'Arial', 30);
+        this.speedLabel.setPosition(new cc.Point(300, 275));
         this.addChild(this.speedLabel);
     }
 });
