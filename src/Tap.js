@@ -33,9 +33,7 @@ var Tap = cc.Sprite.extend({
     stop: function () {
         // hide the tap
         this.setOpacity(0);
-        // set speed
-        speed = 0;
-        // unUpdate
+        // un-update
         this.unscheduleUpdate()
     },
 
@@ -91,5 +89,5 @@ Tap.decreaseSpeed = function () {
 };
 
 Tap.getSpeed = function () {
-    return speed;
+    return Math.abs(speed).toFixed(2);
 };

@@ -1,30 +1,14 @@
 var Monster = cc.Sprite.extend({
-    var: monsterHp = 0,
-    var: monsterPower = 0,
+    var: monsterHp = monsterHpDefault,
+    var: monsterPower = monsterPowerDefault,
 
     ctor: function () {
         this._super();
         this.initWithFile('res/Character/char2.png');
     },
 
-    getHp: function () {
-        return monsterHp;
-    },
-
-    setHp: function (newHp) {
-        monsterHp = newHp;
-    },
-
     resetHp: function () {
         monsterHp = monsterHpDefault;
-    },
-
-    getPower: function () {
-        return monsterPower;
-    },
-
-    setPower: function (newPower) {
-        monsterPower = newPower;
     },
 
     resetPower: function () {
@@ -35,3 +19,19 @@ var Monster = cc.Sprite.extend({
         return monsterHp <= 0;
     }
 });
+
+Monster.getHp = function () {
+    return Number(monsterHp);
+};
+
+Monster.setHp = function (newHp) {
+    monsterHp = Number(newHp);
+};
+
+Monster.getPower = function () {
+    return Number(monsterPower);
+};
+
+Monster.setPower = function (newPower) {
+    monsterPower = Number(newPower);
+};

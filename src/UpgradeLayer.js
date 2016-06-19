@@ -37,12 +37,6 @@ var UpgradeLayer = cc.LayerColor.extend({
         }
     },
 
-    setHeroHp: function (newHp) {
-        this.hero.setHp(newHp);
-        mainHeroHp = newHp;
-        this.heroLabel.setString('HP: ' + newHp);
-    },
-
     GoBack: function () {
         this.back = new cc.MenuItemImage(
             'res/Mechanic/BackButton.jpg',
@@ -95,28 +89,32 @@ var UpgradeLayer = cc.LayerColor.extend({
         if (upPoint > 0) {
             hpUpgrade += 1;
             upPoint -= 1;
+
+            const hp = (Hero.getHp() + (3 * hpUpgrade * stage)).toFixed(0);
+            const futureHp = (3 * (hpUpgrade + 1) * stage).toFixed(0);
+
             // FEATURE: 18/6/59 add hero when player add upgrade point
-            mainHeroHp += (3 * hpUpgrade * stage);
-            mainHeroHp.toFixed(0);
+            Hero.setHp(hp);
 
             this.upPointLabel.setString('Upgrade Point: ' + upPoint);
-            this.hpUpLabel.setString('HP (' + mainHeroHp + '+' + (3 * (hpUpgrade + 1) * stage) + '): ' + hpUpgrade);
+            this.hpUpLabel.setString('HP (' + hp + '+' + futureHp + '): ' + hpUpgrade);
         }
     },
 
     powerUpgrade: function () {
-        // powerUpgrade should add by 1 because it show the future power
-        const power = ((3 / 2) * ((powerUpgrade + 1) / 10) * (stage / 4)).toFixed(3);
 
         if (upPoint > 0) {
             powerUpgrade += 1;
             upPoint -= 1;
+
+            const power = (Hero.getPower() + ((3 / 2) * (powerUpgrade / 10) * (stage / 4))).toFixed(2);
+            const futurePower = ((3 / 2) * ((powerUpgrade + 1) / 10) * (stage / 4)).toFixed(3);
+
             // FEATURE: 18/6/59 add power of hero when player upgrade it
-            mainHeroPower += ((3 / 2) * (powerUpgrade / 10) * (stage / 4));
-            mainHeroPower.toFixed(2);
+            Hero.setPower(power);
 
             this.upPointLabel.setString('Upgrade Point: ' + upPoint);
-            this.powerUpLabel.setString('POWER (' + mainHeroPower + '+' + power + '): ' + powerUpgrade);
+            this.powerUpLabel.setString('POWER (' + power + '+' + futurePower + '): ' + powerUpgrade);
         }
     },
 
@@ -124,11 +122,12 @@ var UpgradeLayer = cc.LayerColor.extend({
         if (upPoint > 0) {
             speedUpgrade += 1;
             upPoint -= 1;
+
             // FEATURE: 18/6/59 decrease speed when user update speed
             Tap.decreaseSpeed();
 
             this.upPointLabel.setString('Upgrade Point: ' + upPoint);
-            this.speedLabel.setString('SPEED (' + (Tap.getSpeed() - 1).toFixed(0) + '-1): ' + speedUpgrade);
+            this.speedLabel.setString('SPEED (' + (Tap.getSpeed() - 1).toFixed(2) + '-1): ' + speedUpgrade);
         }
     },
 
@@ -139,15 +138,17 @@ var UpgradeLayer = cc.LayerColor.extend({
     },
 
     createHpUpgradeLabel: function () {
-        this.hpUpLabel = cc.LabelTTF.create('HP (' + Hero.getHp() + '+' + (3 * (hpUpgrade + 1) * stage) + '): ' + hpUpgrade, 'Arial', 30);
+        const futureHp = (3 * (hpUpgrade + 1) * stage).toFixed(0);
+
+        this.hpUpLabel = cc.LabelTTF.create('HP (' + Hero.getHp().toFixed(2) + '+' + futureHp + '): ' + hpUpgrade, 'Arial', 30);
         this.hpUpLabel.setPosition(new cc.Point(300, 525));
         this.addChild(this.hpUpLabel);
     },
 
     createPowerUpgradeLabel: function () {
-        const power = ((3 / 2) * ((powerUpgrade + 1) / 10) * (stage / 4)).toFixed(3);
+        const futurePower = ((3 / 2) * ((powerUpgrade + 1) / 10) * (stage / 4)).toFixed(4);
 
-        this.powerUpLabel = cc.LabelTTF.create('POWER (' + Hero.getPower() + '+' + power + '): ' + powerUpgrade, 'Arial', 30);
+        this.powerUpLabel = cc.LabelTTF.create('POWER (' + Hero.getPower().toFixed(2) + '+' + futurePower + '): ' + powerUpgrade, 'Arial', 30);
         this.powerUpLabel.setPosition(new cc.Point(300, 400));
         this.addChild(this.powerUpLabel);
     },

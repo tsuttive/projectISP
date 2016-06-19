@@ -3,24 +3,29 @@ var GameLayer = cc.LayerColor.extend({
     init: function () {
         this._super(new cc.Color(60, 179, 113, 255));
         this.setPosition(new cc.Point(0, 0));
-
+        // keyboard
         this.addKeyboardHandlers();
+        // update
         this.scheduleUpdate();
+        // button
+        this.attackCommand();
+        this.spAttackCommand();
+        this.upgradeCommand();
+        // other
         this.createBg();
         this.createGuage();
         this.createTap();
         this.createCharacter();
+        // Effect
+        this.createHeroEffect();
+        this.createMonsterEffect();
+        // label
+        this.createUpgradePointLabel();
         this.createHeroLabel();
         this.createMonsterLabel();
         this.createStageLabel();
         this.createSPLabel();
-        this.attackCommand();
-        this.spAttackCommand();
-        this.upgradeCommand();
-        this.createUpgradePointLabel();
         this.createSPHitLabel();
-        this.createHeroEffect();
-        this.createMonsterEffect();
         this.createMuteLabel();
     },
 
@@ -66,31 +71,35 @@ var GameLayer = cc.LayerColor.extend({
         // debug code
         if (keyCode == cc.KEY.q) {
             this.heroAttack();
+            console.warn("attack");
+        }
+        // hack
+        if (keyCode == cc.KEY.h) {
+            upPoint++;
+            console.warn("add upPoint");
         }
 
         // debug code
         if (keyCode == cc.KEY.s) {
             console.info("----------------------------------");
-            console.info("speed: " + Tap.getSpeed().toFixed(2));
+            console.info("speed: " + Tap.getSpeed());
             console.info("tSpeed: " + tSpeed);
             console.info("hero hp: " + Hero.getHp());
             console.info("hero power: " + Hero.getPower());
-            console.info("monster hp: " + this.monster.getHp());
-            console.info("monster power: " + this.monster.getPower());
+            console.info("monster hp: " + Monster.getHp());
+            console.info("monster power: " + Monster.getPower());
             console.info("----------------------------------");
         }
     },
 
-    setMonsterHp: function (newHp) {
-        this.monster.setHp(newHp);
-        mainMonsterHp = this.monster.getHp();
-        this.monsterLabel.setString('HP: ' + mainMonsterHp);
+    setHeroHp: function (newHp) {
+        Hero.setHp(newHp);
+        this.heroLabel.setString('HP: ' + Hero.getHp().toFixed(2));
     },
 
-    setHeroHp: function (newHp) {
-        this.hero.setHp(newHp);
-        mainHeroHp = Hero.getHp();
-        this.heroLabel.setString('HP: ' + mainHeroHp);
+    setMonsterHp: function (newHp) {
+        Monster.setHp(newHp);
+        this.monsterLabel.setString('HP: ' + Monster.getHp().toFixed(2));
     },
 
     update: function (dt) {
@@ -161,8 +170,7 @@ var GameLayer = cc.LayerColor.extend({
     },
 
     heroAttack: function () {
-        this.setMonsterHp(mainMonsterHp -= Hero.getPower());
-        mainMonsterHp.toFixed(0);
+        this.setMonsterHp(Monster.getHp() - Hero.getPower());
 
         if (countSuccess < 5 && SPHit == 0) {
             countSuccess++;
@@ -178,8 +186,7 @@ var GameLayer = cc.LayerColor.extend({
     },
 
     monsterAttack: function () {
-        this.setHeroHp(mainHeroHp -= this.monster.getPower());
-        mainHeroHp.toFixed(0);
+        this.setHeroHp(Hero.getHp() - Monster.getPower());
 
         if (SPHit > 0) {
             SPHit--;
@@ -201,7 +208,7 @@ var GameLayer = cc.LayerColor.extend({
 
         // FEATURE: 18/6/59 upgrade hp monster every level
         this.setMonsterHp(monsterHpDefault + (13 * stage));
-        this.monster.setPower(this.monster.getPower());
+        Monster.setPower(Monster.getPower());
 
         this.stageLabel.setString('Stage: ' + stage);
         this.upPointLabel.setString('Upgrade Point: ' + upPoint);
@@ -281,25 +288,19 @@ var GameLayer = cc.LayerColor.extend({
         this.monster = new Monster();
         this.addChild(this.hero);
         this.addChild(this.monster);
-        // set hp
-        this.hero.setHp(mainHeroHp);
-        this.monster.setHp(mainMonsterHp);
-        // set power
-        this.hero.setPower(mainHeroPower);
-        this.monster.setPower(mainMonsterPower);
         // set position
         this.monster.setPosition(new cc.Point(600, 373));
         this.hero.setPosition(new cc.Point(200, 350));
     },
 
     createHeroLabel: function () {
-        this.heroLabel = cc.LabelTTF.create('HP: ' + mainHeroHp, 'Arial', 40);
+        this.heroLabel = cc.LabelTTF.create('HP: ' + Hero.getHp().toFixed(2), 'Arial', 40);
         this.heroLabel.setPosition(new cc.Point(200, 500));
         this.addChild(this.heroLabel);
     },
 
     createMonsterLabel: function () {
-        this.monsterLabel = cc.LabelTTF.create('HP: ' + mainMonsterHp, 'Arial', 40);
+        this.monsterLabel = cc.LabelTTF.create('HP: ' + Monster.getHp().toFixed(2), 'Arial', 40);
         this.monsterLabel.setPosition(new cc.Point(600, 500));
         this.addChild(this.monsterLabel);
     },
@@ -366,11 +367,6 @@ var heroHpDefault = 100;
 var heroPowerDefault = 10;
 var monsterHpDefault = 50;
 var monsterPowerDefault = 7;
-// present value
-var mainHeroHp = heroHpDefault;
-var mainHeroPower = heroPowerDefault;
-var mainMonsterHp = monsterHpDefault;
-var mainMonsterPower = monsterPowerDefault;
 // SPAttack count
 var SPHit = 0;
 // update point
