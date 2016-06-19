@@ -15,6 +15,7 @@ var Tap = cc.Sprite.extend({
         if (timer != 0) {
             timer++;
             if (timer % 60 == 0) {
+                // FEATURE: 19/6/59 add speed for 0.7 in every second
                 if (speed > 0)
                     speed += 0.07;
                 else
@@ -63,7 +64,7 @@ var Tap = cc.Sprite.extend({
     setSpeed: function () {
         // FEATURE: 18/6/59 increase speed by stage
         speed = tSpeed + stage;
-        speed -= decrease;
+        speed = Math.abs(speed) - decrease;
     },
 
     rePos: function () {
@@ -85,6 +86,7 @@ var Tap = cc.Sprite.extend({
 
 // create static method
 Tap.decreaseSpeed = function () {
+    speed = Math.abs(speed) - 1;
     decrease = speedUpgrade;
 };
 

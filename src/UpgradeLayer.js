@@ -127,7 +127,7 @@ var UpgradeLayer = cc.LayerColor.extend({
             Tap.decreaseSpeed();
 
             this.upPointLabel.setString('Upgrade Point: ' + upPoint);
-            this.speedLabel.setString('SPEED (' + (Tap.getSpeed() - 1).toFixed(2) + '-1): ' + speedUpgrade);
+            this.speedLabel.setString('SPEED (' + Tap.getSpeed() + '-1): ' + speedUpgrade);
         }
     },
 
