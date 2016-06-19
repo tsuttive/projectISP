@@ -222,14 +222,6 @@ var GameLayer = cc.LayerColor.extend({
         this.monster.resetHp();
         this.monster.resetPower();
 
-        countSuccess = 0;
-        SPHit = 0;
-        upPoint = 0;
-
-        hpUpgrade = 0;
-        powerUpgrade = 0;
-        speedUpgrade = 0;
-
         this.stageLabel.setString('Stage: ' + stage);
         this.spLabel.setString('SP charge: ' + countSuccess);
         this.upPointLabel.setString('Upgrade Point: ' + upPoint);

@@ -45,6 +45,14 @@ var GameOverLayer = cc.LayerColor.extend({
             'res/Mechanic/RestartPush.jpg',
             function () {
                 stage = 1;
+                countSuccess = 0;
+                SPHit = 0;
+                upPoint = 0;
+
+                hpUpgrade = 0;
+                powerUpgrade = 0;
+                speedUpgrade = 0;
+
                 gameClear = false;
                 cc.director.runScene(cc.TransitionCrossFade.create(0.5, new TitleScene()));
             }, this);
