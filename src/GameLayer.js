@@ -71,10 +71,10 @@ var GameLayer = cc.LayerColor.extend({
         // debug code
         if (keyCode == cc.KEY.s) {
             console.info("----------------------------------");
-            console.info("speed: " + this.tap.getSpeed().toFixed(2));
+            console.info("speed: " + Tap.getSpeed().toFixed(2));
             console.info("tSpeed: " + tSpeed);
-            console.info("hero hp: " + this.hero.getHp());
-            console.info("hero power: " + this.hero.getPower());
+            console.info("hero hp: " + Hero.getHp());
+            console.info("hero power: " + Hero.getPower());
             console.info("monster hp: " + this.monster.getHp());
             console.info("monster power: " + this.monster.getPower());
             console.info("----------------------------------");
@@ -89,7 +89,7 @@ var GameLayer = cc.LayerColor.extend({
 
     setHeroHp: function (newHp) {
         this.hero.setHp(newHp);
-        mainHeroHp = this.hero.getHp();
+        mainHeroHp = Hero.getHp();
         this.heroLabel.setString('HP: ' + mainHeroHp);
     },
 
@@ -161,7 +161,8 @@ var GameLayer = cc.LayerColor.extend({
     },
 
     heroAttack: function () {
-        this.setMonsterHp(mainMonsterHp -= this.hero.getPower());
+        this.setMonsterHp(mainMonsterHp -= Hero.getPower());
+        mainMonsterHp.toFixed(0);
 
         if (countSuccess < 5 && SPHit == 0) {
             countSuccess++;
@@ -178,6 +179,7 @@ var GameLayer = cc.LayerColor.extend({
 
     monsterAttack: function () {
         this.setHeroHp(mainHeroHp -= this.monster.getPower());
+        mainHeroHp.toFixed(0);
 
         if (SPHit > 0) {
             SPHit--;
@@ -363,7 +365,7 @@ var stage = 1;
 var heroHpDefault = 100;
 var heroPowerDefault = 10;
 var monsterHpDefault = 50;
-var monsterPowerDefault = 10;
+var monsterPowerDefault = 7;
 // present value
 var mainHeroHp = heroHpDefault;
 var mainHeroPower = heroPowerDefault;

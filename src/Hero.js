@@ -8,20 +8,12 @@ var Hero = cc.Sprite.extend({
 
     },
 
-    getHp: function () {
-        return heroHp;
-    },
-
     setHp: function (newHp) {
         heroHp = newHp;
     },
 
     resetHp: function () {
         heroHp = heroHpDefault;
-    },
-
-    getPower: function () {
-        return heroPower;
     },
 
     setPower: function (newPower) {
@@ -36,3 +28,11 @@ var Hero = cc.Sprite.extend({
         return heroHp <= 0;
     }
 });
+
+Hero.getHp = function () {
+    return heroHp;
+};
+
+Hero.getPower = function () {
+    return heroPower;
+};

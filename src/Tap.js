@@ -59,10 +59,6 @@ var Tap = cc.Sprite.extend({
         return (Math.abs(myPos - oPos) <= 15);
     },
 
-    getSpeed: function () {
-        return speed;
-    },
-
     /**
      * set by using state and tSpeed
      */
@@ -92,4 +88,8 @@ var Tap = cc.Sprite.extend({
 // create static method
 Tap.decreaseSpeed = function () {
     decrease = speedUpgrade;
+};
+
+Tap.getSpeed = function () {
+    return speed;
 };
