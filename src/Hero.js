@@ -16,12 +16,20 @@ var Hero = cc.Sprite.extend({
         heroHp = newHp;
     },
 
+    resetHp: function () {
+        heroHp = heroHpDefault;
+    },
+
     getPower: function () {
         return heroPower;
     },
 
     setPower: function (newPower) {
         heroPower = newPower;
+    },
+
+    resetPower: function () {
+        heroPower = heroPowerDefault;
     },
 
     isDead: function () {

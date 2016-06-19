@@ -120,7 +120,7 @@ var UpgradeLayer = cc.LayerColor.extend({
             this.upPointLabel.setString('Upgrade Point: ' + upPoint);
             this.speedLabel.setString('SPEED UPGRADED: ' + speedUpgrade);
             // FEATURE: 18/6/59 decrease speed when user update speed
-            tSpeed -= stage;
+            Tap.decreaseSpeed();
         }
     },
 

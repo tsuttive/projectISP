@@ -71,7 +71,7 @@ var GameLayer = cc.LayerColor.extend({
         // debug code
         if (keyCode == cc.KEY.s) {
             console.info("----------------------------------");
-            console.info("speed: " + this.tap.getSpeed());
+            console.info("speed: " + this.tap.getSpeed().toFixed(2));
             console.info("tSpeed: " + tSpeed);
             console.info("hero hp: " + this.hero.getHp());
             console.info("hero power: " + this.hero.getPower());
@@ -197,8 +197,6 @@ var GameLayer = cc.LayerColor.extend({
         stage++;
         upPoint++;
 
-        tSpeed = this.tap.speed;
-
         // FEATURE: 18/6/59 upgrade hp monster every level
         this.setMonsterHp(monsterHpDefault + (13 * stage));
         this.monster.setPower(this.monster.getPower());
@@ -210,18 +208,18 @@ var GameLayer = cc.LayerColor.extend({
     gameOver: function () {
         cc.audioEngine.playEffect('res/music/died.mp3');
 
-        this.setHeroHp(heroHpDefault);
-        this.setMonsterHp(monsterHpDefault);
-
-        this.hero.setPower(10);
-        this.monster.setPower(7);
+        this.hero.resetHp();
+        this.hero.resetPower();
+        this.monster.resetHp();
+        this.monster.resetPower();
 
         countSuccess = 0;
-        upPoint = 0;
         SPHit = 0;
+        upPoint = 0;
 
         hpUpgrade = 0;
         powerUpgrade = 0;
+        speedUpgrade = 0;
 
         this.stageLabel.setString('Stage: ' + stage);
         this.spLabel.setString('SP charge: ' + countSuccess);

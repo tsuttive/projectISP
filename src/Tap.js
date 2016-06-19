@@ -1,6 +1,8 @@
 //noinspection JSDuplicatedDeclaration
 var Tap = cc.Sprite.extend({
     var: timer = 0,
+    var: speed = 0,
+    var: decrease = 0,
 
     ctor: function () {
         this._super();
@@ -13,33 +15,33 @@ var Tap = cc.Sprite.extend({
         if (timer != 0) {
             timer++;
             if (timer % 60 == 0) {
-                if (this.speed > 0)
-                    this.speed += 0.07;
+                if (speed > 0)
+                    speed += 0.07;
                 else
-                    this.speed -= 0.07;
+                    speed -= 0.07;
             }
         }
         var pos = this.getPosition();
         if (pos.x <= 20) {
-            this.speed *= -1;
+            speed *= -1;
         } else if (pos.x >= 780) {
-            this.speed *= -1;
+            speed *= -1;
         }
-        this.setPosition(new cc.Point(pos.x + this.speed, pos.y));
+        this.setPosition(new cc.Point(pos.x + speed, pos.y));
     },
 
     stop: function () {
         // hide the tap
         this.setOpacity(0);
         // set speed
-        this.speed = 0;
+        speed = 0;
         // unUpdate
         this.unscheduleUpdate()
     },
 
     isStop: function () {
         timer = 0;
-        return (this.getOpacity() == 0) && (this.speed == 0);
+        return (this.getOpacity() == 0) && (speed == 0);
     },
 
     start: function () {
@@ -58,7 +60,7 @@ var Tap = cc.Sprite.extend({
     },
 
     getSpeed: function () {
-        return this.speed;
+        return speed;
     },
 
     /**
@@ -66,7 +68,8 @@ var Tap = cc.Sprite.extend({
      */
     setSpeed: function () {
         // FEATURE: 18/6/59 increase speed by stage
-        this.speed = tSpeed + stage;
+        speed = tSpeed + stage;
+        speed -= decrease;
     },
 
     rePos: function () {
@@ -81,7 +84,12 @@ var Tap = cc.Sprite.extend({
 
         var random = Math.round(Math.random() * 2);
         if (random == 0) {
-            this.speed *= -1;
+            speed *= -1;
         }
     }
 });
+
+// create static method
+Tap.decreaseSpeed = function () {
+    decrease = speedUpgrade;
+};

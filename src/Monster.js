@@ -15,12 +15,20 @@ var Monster = cc.Sprite.extend({
         monsterHp = newHp;
     },
 
+    resetHp: function () {
+        monsterHp = monsterHpDefault;
+    },
+
     getPower: function () {
         return monsterPower;
     },
 
     setPower: function (newPower) {
         monsterPower = newPower;
+    },
+
+    resetPower: function () {
+        monsterPower = monsterPowerDefault;
     },
 
     isDead: function () {
