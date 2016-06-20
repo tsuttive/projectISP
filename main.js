@@ -86,23 +86,18 @@ var checkBrowser = function () {
     var nu = navigator.userAgent;
     if ((nu.indexOf("Opera") || nu.indexOf('OPR')) != -1) {
         browser = 'Opera';
-        alert('Opera (support sound)');
         return true;
     } else if (nu.indexOf("Chrome") != -1) {
         browser = 'Chrome';
-        alert('Chrome (support sound)');
         return true;
     } else if (nu.indexOf("Safari") != -1) {
         browser = 'Safari';
-        alert('Safari (not support sound)');
         return false;
     } else if (nu.indexOf("Firefox") != -1) {
         browser = 'Firefox';
-        alert('Firefox (support sound)');
         return true;
     } else if ((nu.indexOf("MSIE") != -1 ) || (!!document.documentMode == true )) {
         browser = 'IE';
-        alert('IE (support sound)');
         return true;
     } else {
         browser = 'unknown';

@@ -41,8 +41,8 @@ var GameOverLayer = cc.LayerColor.extend({
 
     replay: function () {
         this.SPAttack = new cc.MenuItemImage(
-            'res/Mechanic/Restart.jpg',
-            'res/Mechanic/RestartPush.jpg',
+            'res/Mechanic/RestartBtn.jpg',
+            'res/Mechanic/RestartBtn_push.jpg',
             function () {
                 stage = 1;
                 countSuccess = 0;

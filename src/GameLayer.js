@@ -116,8 +116,8 @@ var GameLayer = cc.LayerColor.extend({
     // FIXME: 18/6/59 press user press button, program will delay a little
     attackCommand: function () {
         const attack = new cc.MenuItemImage(
-            'res/Mechanic/AttackButton.jpg',
-            'res/Mechanic/AttackButtonPush.jpg',
+            'res/Mechanic/DefendBtn.jpg',
+            'res/Mechanic/DefendBtn_push.jpg',
             function () {
                 this.attack();
             }, this);
@@ -128,10 +128,10 @@ var GameLayer = cc.LayerColor.extend({
 
     spAttackCommand: function () {
         const SPAttack = new cc.MenuItemImage(
-            'res/Mechanic/SPButton.jpg',
-            'res/Mechanic/SPButtonPush.jpg',
+            'res/Mechanic/SPAttackBtn.jpg',
+            'res/Mechanic/SPAttackBtn_push.jpg',
             function () {
-                this.shortcutOfSPAttackButton();
+
             }, this);
         this.SPButton = new cc.Menu(SPAttack);
         this.SPButton.setPosition(new cc.Point(402.5, 51.5));
@@ -140,8 +140,8 @@ var GameLayer = cc.LayerColor.extend({
 
     upgradeCommand: function () {
         this.Upgrade = new cc.MenuItemImage(
-            'res/Mechanic/UpgradeButton.jpg',
-            'res/Mechanic/UpgradeButtonPush.jpg',
+            'res/Mechanic/UpgradeBtn.jpg',
+            'res/Mechanic/UpgradeBtn_push.jpg',
             function () {
                 tapHere = false;
                 cc.director.runScene(new UpgradeScene());
