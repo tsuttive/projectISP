@@ -46,7 +46,7 @@ var GameLayer = cc.LayerColor.extend({
         }
         // sp Attack
         if (keyCode == cc.KEY.x) {
-            this.shortcutOfSPAttackButton();
+            this.SpAttack();
         }
 
         // update page
@@ -78,6 +78,11 @@ var GameLayer = cc.LayerColor.extend({
             upPoint++;
             console.warn("add upPoint");
         }
+        // hack
+        if (keyCode == cc.KEY.j) {
+            countSuccess = 5;
+            console.warn("complete sp charge");
+        }
 
         // debug code
         if (keyCode == cc.KEY.s) {
@@ -102,17 +107,6 @@ var GameLayer = cc.LayerColor.extend({
         this.monsterLabel.setString('HP: ' + Monster.getHp().toFixed(2));
     },
 
-    update: function (dt) {
-        if (countSuccess == 5) {
-            this.spLabel.setString('SP charge: MAX!!');
-        }
-        // expend max level to 50
-        if (stage > 50) {
-            gameClear = true;
-            this.gameOver();
-        }
-    },
-
     // FIXME: 18/6/59 press user press button, program will delay a little
     attackCommand: function () {
         const attack = new cc.MenuItemImage(
@@ -131,7 +125,7 @@ var GameLayer = cc.LayerColor.extend({
             'res/Mechanic/SPAttackBtn.jpg',
             'res/Mechanic/SPAttackBtn_push.jpg',
             function () {
-
+                this.spAttack();
             }, this);
         this.SPButton = new cc.Menu(SPAttack);
         this.SPButton.setPosition(new cc.Point(402.5, 51.5));
@@ -156,7 +150,7 @@ var GameLayer = cc.LayerColor.extend({
             this.tap.stop();
             // hero isAttack
             if (this.tap.closeTo(this.guage)) {
-                this.heroAttack();
+                this.heroAttack(1);
                 // monster isAttack
             } else {
                 this.monsterAttack();
@@ -169,24 +163,40 @@ var GameLayer = cc.LayerColor.extend({
         }
     },
 
-    heroAttack: function () {
-        this.setMonsterHp(Monster.getHp() - Hero.getPower());
-
-        if (countSuccess < 5 && SPHit == 0) {
-            countSuccess++;
+    spAttack: function () {
+        if (countSuccess == 5) {
+            this.heroAttack(4);
+            countSuccess = 0;
             this.spLabel.setString('SP charge: ' + countSuccess);
+            
+            this.tap.stop();
+            tapHere = false;
         }
+    },
+
+    // multiply mean power * multiply to attack monster
+    heroAttack: function (multiply) {
+        this.setMonsterHp(Monster.getHp() - (Hero.getPower() * multiply));
+
+        if (countSuccess < 5) {
+            countSuccess++;
+        }
+
+        this.spLabel.setString('SP charge: ' + (countSuccess != 5 ? countSuccess : 'MAX!!'));
+
 
         if (this.monster.isDead())
             this.passTheLevel();
         else
             cc.audioEngine.playEffect('res/music/heroSound.mp3');
-
         this.AttackPos("hero");
     },
 
     monsterAttack: function () {
         this.setHeroHp(Hero.getHp() - Monster.getPower());
+
+        countSuccess = 0;
+        this.spLabel.setString('SP charge: ' + countSuccess);
 
         if (SPHit > 0) {
             SPHit--;
@@ -201,6 +211,23 @@ var GameLayer = cc.LayerColor.extend({
         this.AttackPos("monster");
     },
 
+    AttackPos: function (who) {
+        if (who == "hero") {
+            this.hero.setPosition(new cc.Point(400, 350));
+            this.eff1.setOpacity(255);
+        } else {
+            this.monster.setPosition(new cc.Point(400, 373));
+            this.eff2.setOpacity(255);
+        }
+    },
+
+    returnEffect: function () {
+        this.hero.setPosition(new cc.Point(200, 350));
+        this.monster.setPosition(new cc.Point(600, 373));
+        this.eff1.setOpacity(0);
+        this.eff2.setOpacity(0);
+    },
+
     passTheLevel: function () {
         cc.audioEngine.playEffect('res/music/died.mp3');
         stage++;
@@ -212,6 +239,12 @@ var GameLayer = cc.LayerColor.extend({
 
         this.stageLabel.setString('Stage: ' + stage);
         this.upPointLabel.setString('Upgrade Point: ' + upPoint);
+
+        // expend max level to 50
+        if (stage > 50) {
+            gameClear = true;
+            this.gameOver();
+        }
     },
 
     gameOver: function () {
@@ -228,32 +261,6 @@ var GameLayer = cc.LayerColor.extend({
         this.spHitLabel.setString('SP Hit: ' + SPHit);
 
         cc.director.runScene(new GameOverScene());
-    },
-
-    shortcutOfSPAttackButton: function () {
-        SPHit = 3;
-        this.tap.runAction(cc.FadeIn.create(0));
-        countSuccess = 0;
-        this.spLabel.setString('SP charge: ' + countSuccess);
-        this.spHitLabel.setString('SP Hit: ' + SPHit);
-        this.returnEffect();
-    },
-
-    returnEffect: function () {
-        this.hero.setPosition(new cc.Point(200, 350));
-        this.monster.setPosition(new cc.Point(600, 373));
-        this.eff1.setOpacity(0);
-        this.eff2.setOpacity(0);
-    },
-
-    AttackPos: function (who) {
-        if (who == "hero") {
-            this.hero.setPosition(new cc.Point(400, 350));
-            this.eff1.setOpacity(255);
-        } else {
-            this.monster.setPosition(new cc.Point(400, 373));
-            this.eff2.setOpacity(255);
-        }
     },
 
     createGuage: function () {
@@ -304,7 +311,7 @@ var GameLayer = cc.LayerColor.extend({
     },
 
     createSPLabel: function () {
-        this.spLabel = cc.LabelTTF.create('SP charge: ' + countSuccess, 'Arial', 30);
+        this.spLabel = cc.LabelTTF.create('SP charge: ' + (countSuccess != 5 ? countSuccess : 'MAX!!'), 'Arial', 30);
         this.spLabel.setPosition(new cc.Point(150, 220));
         this.addChild(this.spLabel);
     },
@@ -359,10 +366,10 @@ var heroHpDefault = 100;
 var heroPowerDefault = 10;
 var monsterHpDefault = 50;
 var monsterPowerDefault = 7;
-// SPAttack count
-var SPHit = 0;
 // update point
 var upPoint = 0;
+// SPAttack count
+var SPHit = 0;
 // charge attack
 var countSuccess = 0;
 // object speed
