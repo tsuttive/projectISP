@@ -120,14 +120,18 @@ var UpgradeLayer = cc.LayerColor.extend({
 
     speedUpgrade: function () {
         if (upPoint > 0) {
-            speedUpgrade += 1;
-            upPoint -= 1;
+            if (Tap.getSpeed() > 3) {
+                speedUpgrade += 1;
+                upPoint -= 1;
 
-            // FEATURE: 18/6/59 decrease speed when user update speed
-            Tap.decreaseSpeed();
+                // FEATURE: 18/6/59 decrease speed when user update speed
+                Tap.decreaseSpeed();
 
-            this.upPointLabel.setString('Upgrade Point: ' + upPoint);
-            this.speedLabel.setString('SPEED (' + Tap.getSpeed() + '-1): ' + speedUpgrade);
+                this.upPointLabel.setString('Upgrade Point: ' + upPoint);
+                this.speedLabel.setString('SPEED (' + Tap.getSpeed() + '-2): ' + speedUpgrade);
+            } else {
+                window.alert("your speed is too low");
+            }
         }
     },
 
@@ -154,7 +158,7 @@ var UpgradeLayer = cc.LayerColor.extend({
     },
 
     createSpeedUpgradeLabel: function () {
-        this.speedLabel = cc.LabelTTF.create('SPEED (' + Tap.getSpeed() + '-1): ' + speedUpgrade, 'Arial', 30);
+        this.speedLabel = cc.LabelTTF.create('SPEED (' + Tap.getSpeed() + '-2): ' + speedUpgrade, 'Arial', 30);
         this.speedLabel.setPosition(new cc.Point(300, 275));
         this.addChild(this.speedLabel);
     }

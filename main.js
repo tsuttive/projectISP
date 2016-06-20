@@ -53,13 +53,14 @@
  */
 var width = 800;
 var height = 600;
+var browser = '';
 
 cc.game.onStart = function () {
     if (!cc.sys.isNative && document.getElementById("cocosLoading")) //If referenced loading.js, please remove it
         document.body.removeChild(document.getElementById("cocosLoading"));
 
     // Pass true to enable retina display, on Android disabled by default to improve performance
-    cc.view.enableRetina(cc.sys.os === cc.sys.OS_IOS ? true : false);
+    cc.view.enableRetina(cc.sys.os === cc.sys.OS_IOS);
     // Adjust viewport meta
     cc.view.adjustViewPort(true);
     // Setup the resolution policy and design resolution size
@@ -70,9 +71,41 @@ cc.game.onStart = function () {
     // The game will be resized when browser size change
     cc.view.resizeWithBrowserSize(true);
     //load resources
-    // cc.audioEngine.playMusic("res/Night.mp3",true); // may not support in safari
+    // check safari can't play sound
+    if (browser != 'Safari') {
+        console.log("sound");
+        cc.audioEngine.playMusic("res/music/Night.mp3", true); // may not support in safari
+    }
     cc.LoaderScene.preload(g_resources, function () {
         cc.director.runScene(new TitleScene);
     }, this);
 };
 cc.game.run();
+
+var checkBrowser = function () {
+    var nu = navigator.userAgent;
+    if ((nu.indexOf("Opera") || nu.indexOf('OPR')) != -1) {
+        browser = 'Opera';
+        alert('Opera (support sound)');
+        return true;
+    } else if (nu.indexOf("Chrome") != -1) {
+        browser = 'Chrome';
+        alert('Chrome (support sound)');
+        return true;
+    } else if (nu.indexOf("Safari") != -1) {
+        browser = 'Safari';
+        alert('Safari (not support sound)');
+        return false;
+    } else if (nu.indexOf("Firefox") != -1) {
+        browser = 'Firefox';
+        alert('Firefox (support sound)');
+        return true;
+    } else if ((nu.indexOf("MSIE") != -1 ) || (!!document.documentMode == true )) {
+        browser = 'IE';
+        alert('IE (support sound)');
+        return true;
+    } else {
+        browser = 'unknown';
+        alert('unknown');
+    }
+};

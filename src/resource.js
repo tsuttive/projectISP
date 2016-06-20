@@ -16,13 +16,17 @@ var res = {
     monster_png: "res/Character/char2.png",
     restart_jpg: "res/Mechanic/Restart.jpg",
     restartPush_jpg: "res/Mechanic/RestartPush.jpg",
-    // music_mp3: "res/Night.mp3",
     bg_png: "res/Others/bg.png",
     heroSound_mp3: "res/music/heroSound.mp3",
     monsterSound_mp3: "res/music/monsterSound.mp3",
     died_mp3: "res/music/died.mp3",
     eff_png: "res/Others/eff.png"
 };
+
+if (checkBrowser()) {
+    console.log("in");
+    res.music_mp3 = 'res/music/Night.mp3';
+}
 
 var g_resources = [];
 for (var i in res) {

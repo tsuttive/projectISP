@@ -86,8 +86,8 @@ var Tap = cc.Sprite.extend({
 
 // create static method
 Tap.decreaseSpeed = function () {
-    speed = Math.abs(speed) - 1;
-    decrease = speedUpgrade;
+    speed = Math.abs(speed) - 2;
+    decrease = speedUpgrade * 2;
 };
 
 Tap.getSpeed = function () {
