@@ -69,7 +69,7 @@ var GameLayer = cc.LayerColor.extend({
         // hack
         if (keyCode == cc.KEY.q) {
             this.heroAttack(1);
-            console.warn("attack");
+            console.warn("complete attack");
         }
         // hack
         if (keyCode == cc.KEY.h) {
@@ -81,6 +81,10 @@ var GameLayer = cc.LayerColor.extend({
             countSuccess += 5;
             console.warn("complete add 5 sp charge");
         }
+        if (keyCode == cc.KEY.k) {
+            maxStage += 10;
+            console.warn("complete expend maxStage");
+        }
 
         // debug code
         if (keyCode == cc.KEY.s) {
@@ -89,6 +93,7 @@ var GameLayer = cc.LayerColor.extend({
             console.info("tSpeed: " + tSpeed);
             console.info("hero hp: " + Hero.getHp());
             console.info("hero power: " + Hero.getPower());
+            console.info("hero sp-attack: " + ((Hero.getPower() * (countSuccess - 1)) < 0 ? 0 : (Hero.getPower() * (countSuccess - 1))));
             console.info("monster hp: " + Monster.getHp());
             console.info("monster power: " + Monster.getPower());
             console.info("----------------------------------");
@@ -150,7 +155,7 @@ var GameLayer = cc.LayerColor.extend({
 
     spAttack: function () {
         if (countSuccess >= 5) {
-            this.heroAttack(4 + (countSuccess - 5));
+            this.heroAttack(countSuccess - 1);
             countSuccess = 0;
             this.spLabel.setString('SP charge: ' + countSuccess);
 
@@ -306,7 +311,7 @@ var GameLayer = cc.LayerColor.extend({
 
     createMuteLabel: function () {
         this.muteLabel = cc.LabelTTF.create('', 'Arial', 20);
-        this.muteLabel.setPosition(new cc.Point(width - 50, height - 50));
+        this.muteLabel.setPosition(new cc.Point(screenWidth - 50, screenHeight - 50));
         this.muteLabel.setColor(cc.color(255, 0, 0));
         this.addChild(this.muteLabel);
     },
