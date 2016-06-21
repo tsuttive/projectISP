@@ -137,7 +137,7 @@ var UpgradeLayer = cc.LayerColor.extend({
 
     createUpgradePointLabel: function () {
         this.upPointLabel = cc.LabelTTF.create('Upgrade Point: ' + upPoint, 'Arial', 30);
-        this.upPointLabel.setPosition(new cc.Point(650, 150));
+        this.upPointLabel.setPosition(new cc.Point(665, 150));
         this.addChild(this.upPointLabel);
     },
 

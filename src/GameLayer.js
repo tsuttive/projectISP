@@ -45,8 +45,8 @@ var GameLayer = cc.LayerColor.extend({
             this.attack();
         }
         // sp Attack
-        if (keyCode == cc.KEY.x) {
-            this.SpAttack();
+        if (keyCode == cc.KEY.space) {
+            this.spAttack();
         }
 
         // update page
@@ -68,20 +68,20 @@ var GameLayer = cc.LayerColor.extend({
             }
         }
 
-        // debug code
+        // hack
         if (keyCode == cc.KEY.q) {
-            this.heroAttack();
+            this.heroAttack(1);
             console.warn("attack");
         }
         // hack
         if (keyCode == cc.KEY.h) {
             upPoint++;
-            console.warn("add upPoint");
+            console.warn("complete add upPoint");
         }
         // hack
         if (keyCode == cc.KEY.j) {
-            countSuccess = 5;
-            console.warn("complete sp charge");
+            countSuccess += 5;
+            console.warn("complete add 5 sp charge");
         }
 
         // debug code
@@ -164,11 +164,11 @@ var GameLayer = cc.LayerColor.extend({
     },
 
     spAttack: function () {
-        if (countSuccess == 5) {
-            this.heroAttack(4);
+        if (countSuccess >= 5) {
+            this.heroAttack(4 + (countSuccess - 5));
             countSuccess = 0;
             this.spLabel.setString('SP charge: ' + countSuccess);
-            
+
             this.tap.stop();
             tapHere = false;
         }
@@ -178,12 +178,9 @@ var GameLayer = cc.LayerColor.extend({
     heroAttack: function (multiply) {
         this.setMonsterHp(Monster.getHp() - (Hero.getPower() * multiply));
 
-        if (countSuccess < 5) {
-            countSuccess++;
-        }
+        countSuccess++;
 
-        this.spLabel.setString('SP charge: ' + (countSuccess != 5 ? countSuccess : 'MAX!!'));
-
+        this.spLabel.setString('SP charge: ' + (countSuccess < 5 ? countSuccess : 'MAX(' + (countSuccess - 4) + ')'));
 
         if (this.monster.isDead())
             this.passTheLevel();
@@ -195,8 +192,11 @@ var GameLayer = cc.LayerColor.extend({
     monsterAttack: function () {
         this.setHeroHp(Hero.getHp() - Monster.getPower());
 
-        countSuccess = 0;
-        this.spLabel.setString('SP charge: ' + countSuccess);
+        if (countSuccess != 0) {
+            countSuccess--;
+        }
+
+        this.spLabel.setString('SP charge: ' + (countSuccess < 5 ? countSuccess : 'MAX(' + (countSuccess - 4) + ')'));
 
         if (SPHit > 0) {
             SPHit--;
@@ -241,7 +241,7 @@ var GameLayer = cc.LayerColor.extend({
         this.upPointLabel.setString('Upgrade Point: ' + upPoint);
 
         // expend max level to 50
-        if (stage > 50) {
+        if (stage > maxStage) {
             gameClear = true;
             this.gameOver();
         }
@@ -254,6 +254,9 @@ var GameLayer = cc.LayerColor.extend({
         this.hero.resetPower();
         this.monster.resetHp();
         this.monster.resetPower();
+
+        this.tap.stop();
+        this.tap.resetSpeed();
 
         this.stageLabel.setString('Stage: ' + stage);
         this.spLabel.setString('SP charge: ' + countSuccess);
@@ -311,20 +314,20 @@ var GameLayer = cc.LayerColor.extend({
     },
 
     createSPLabel: function () {
-        this.spLabel = cc.LabelTTF.create('SP charge: ' + (countSuccess != 5 ? countSuccess : 'MAX!!'), 'Arial', 30);
-        this.spLabel.setPosition(new cc.Point(150, 220));
+        this.spLabel = cc.LabelTTF.create('SP charge: ' + (countSuccess < 5 ? countSuccess : 'MAX(' + (countSuccess - 4) + ')'), 'Arial', 30);
+        this.spLabel.setPosition(new cc.Point(400, 220));
         this.addChild(this.spLabel);
     },
 
     createSPHitLabel: function () {
         this.spHitLabel = cc.LabelTTF.create('SP Hit: ' + SPHit, 'Arial', 30);
-        this.spHitLabel.setPosition(new cc.Point(400, 220));
+        this.spHitLabel.setPosition(new cc.Point(150, 220));
         this.addChild(this.spHitLabel);
     },
 
     createUpgradePointLabel: function () {
         this.upPointLabel = cc.LabelTTF.create('Upgrade Point: ' + upPoint, 'Arial', 30);
-        this.upPointLabel.setPosition(new cc.Point(650, 220));
+        this.upPointLabel.setPosition(new cc.Point(665, 220));
         this.addChild(this.upPointLabel);
     },
 
@@ -361,6 +364,7 @@ var StartScene = cc.Scene.extend({
 
 // variable
 var stage = 1;
+var maxStage = 10;
 // default value
 var heroHpDefault = 100;
 var heroPowerDefault = 10;

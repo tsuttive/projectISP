@@ -67,6 +67,11 @@ var Tap = cc.Sprite.extend({
         speed = Math.abs(speed) - decrease;
     },
 
+    resetSpeed: function () {
+        speed = 0;
+        decrease = 0;
+    },
+
     rePos: function () {
         var random = Math.round(Math.random() * 760);
         while (random <= 40) {

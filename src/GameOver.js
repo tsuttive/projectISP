@@ -45,6 +45,7 @@ var GameOverLayer = cc.LayerColor.extend({
             'res/Mechanic/RestartBtn_push.jpg',
             function () {
                 stage = 1;
+
                 countSuccess = 0;
                 SPHit = 0;
                 upPoint = 0;
