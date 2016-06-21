@@ -12,7 +12,7 @@ var UpgradeLayer = cc.LayerColor.extend({
         this.speedButton();
         this.addKeyboardHandlers();
     },
-
+    
     addKeyboardHandlers: function () {
         var self = this;
         cc.eventManager.addListener({
@@ -37,6 +37,56 @@ var UpgradeLayer = cc.LayerColor.extend({
 
         if (keyCode == cc.KEY.e) {
             cc.director.runScene(new StartScene());
+        }
+    },
+
+    hpUpgrade: function () {
+        if (upPoint > 0) {
+            hpUpgrade += 1;
+            upPoint -= 1;
+
+            const hp = (Hero.getHp() + (3 * hpUpgrade * stage)).toFixed(0);
+            const futureHp = (3 * (hpUpgrade + 1) * stage).toFixed(0);
+
+            // FEATURE: 18/6/59 add hero when player add upgrade point
+            Hero.setHp(hp);
+
+            this.upPointLabel.setString('Upgrade Point: ' + upPoint);
+            this.hpUpLabel.setString('HP (' + hp + '+' + futureHp + '): ' + hpUpgrade);
+        }
+    },
+
+    powerUpgrade: function () {
+
+        if (upPoint > 0) {
+            powerUpgrade += 1;
+            upPoint -= 1;
+
+            const power = (Hero.getPower() + ((3 / 2) * (powerUpgrade / 10) * (stage / 4))).toFixed(2);
+            const futurePower = ((3 / 2) * ((powerUpgrade + 1) / 10) * (stage / 4)).toFixed(3);
+
+            // FEATURE: 18/6/59 add power of hero when player upgrade it
+            Hero.setPower(power);
+
+            this.upPointLabel.setString('Upgrade Point: ' + upPoint);
+            this.powerUpLabel.setString('POWER (' + power + '+' + futurePower + '): ' + powerUpgrade);
+        }
+    },
+
+    speedUpgrade: function () {
+        if (upPoint > 0) {
+            if (Tap.getSpeed() > 3) {
+                speedUpgrade += 1;
+                upPoint -= 1;
+
+                // FEATURE: 18/6/59 decrease speed when user update speed
+                Tap.decreaseSpeed();
+
+                this.upPointLabel.setString('Upgrade Point: ' + upPoint);
+                this.speedLabel.setString('SPEED (' + Tap.getSpeed() + '-2): ' + speedUpgrade);
+            } else {
+                window.alert("your speed is too low");
+            }
         }
     },
 
@@ -92,56 +142,6 @@ var UpgradeLayer = cc.LayerColor.extend({
         this.speedDownButton.setPosition(new cc.Point(screenWidth * 0.25, this.speedLabel.getPositionY() - 75));
         this.addChild(this.speedDownButton);
         this.createShortcutLabel("3", this.speedDownButton.getPositionX(), this.speedDownButton.getPositionY());
-    },
-
-    hpUpgrade: function () {
-        if (upPoint > 0) {
-            hpUpgrade += 1;
-            upPoint -= 1;
-
-            const hp = (Hero.getHp() + (3 * hpUpgrade * stage)).toFixed(0);
-            const futureHp = (3 * (hpUpgrade + 1) * stage).toFixed(0);
-
-            // FEATURE: 18/6/59 add hero when player add upgrade point
-            Hero.setHp(hp);
-
-            this.upPointLabel.setString('Upgrade Point: ' + upPoint);
-            this.hpUpLabel.setString('HP (' + hp + '+' + futureHp + '): ' + hpUpgrade);
-        }
-    },
-
-    powerUpgrade: function () {
-
-        if (upPoint > 0) {
-            powerUpgrade += 1;
-            upPoint -= 1;
-
-            const power = (Hero.getPower() + ((3 / 2) * (powerUpgrade / 10) * (stage / 4))).toFixed(2);
-            const futurePower = ((3 / 2) * ((powerUpgrade + 1) / 10) * (stage / 4)).toFixed(3);
-
-            // FEATURE: 18/6/59 add power of hero when player upgrade it
-            Hero.setPower(power);
-
-            this.upPointLabel.setString('Upgrade Point: ' + upPoint);
-            this.powerUpLabel.setString('POWER (' + power + '+' + futurePower + '): ' + powerUpgrade);
-        }
-    },
-
-    speedUpgrade: function () {
-        if (upPoint > 0) {
-            if (Tap.getSpeed() > 3) {
-                speedUpgrade += 1;
-                upPoint -= 1;
-
-                // FEATURE: 18/6/59 decrease speed when user update speed
-                Tap.decreaseSpeed();
-
-                this.upPointLabel.setString('Upgrade Point: ' + upPoint);
-                this.speedLabel.setString('SPEED (' + Tap.getSpeed() + '-2): ' + speedUpgrade);
-            } else {
-                window.alert("your speed is too low");
-            }
-        }
     },
 
     createUpgradePointLabel: function () {

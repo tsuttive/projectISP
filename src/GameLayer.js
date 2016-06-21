@@ -8,8 +8,8 @@ var GameLayer = cc.LayerColor.extend({
         // update
         this.scheduleUpdate();
         // button
-        this.spAttackCommand();
-        this.upgradeCommand();
+        this.spAttackButton();
+        this.upgradeButton();
         // other
         this.createBg();
         this.createBar();
@@ -89,6 +89,7 @@ var GameLayer = cc.LayerColor.extend({
         // debug code
         if (keyCode == cc.KEY.s) {
             console.info("----------------------------------");
+            console.info("stage: " + stage + "/" + maxStage);
             console.info("speed: " + Tap.getSpeed());
             console.info("tSpeed: " + tSpeed);
             console.info("hero hp: " + Hero.getHp());
@@ -108,31 +109,6 @@ var GameLayer = cc.LayerColor.extend({
     setMonsterHp: function (newHp) {
         Monster.setHp(newHp);
         this.monsterLabel.setString('HP: ' + Monster.getHp().toFixed(2));
-    },
-
-    spAttackCommand: function () {
-        const spAttack = new cc.MenuItemImage(
-            'res/Mechanic/SPAttackBtn.jpg',
-            'res/Mechanic/SPAttackBtn_push.jpg',
-            function () {
-                this.spAttack();
-            }, this);
-        this.SPButton = new cc.Menu(spAttack);
-        this.SPButton.setPosition(new cc.Point(200, 51.5));
-        this.addChild(this.SPButton);
-    },
-
-    upgradeCommand: function () {
-        const upgrade = new cc.MenuItemImage(
-            'res/Mechanic/UpgradeBtn.jpg',
-            'res/Mechanic/UpgradeBtn_push.jpg',
-            function () {
-                tapHere = false;
-                cc.director.runScene(new UpgradeScene());
-            }, this);
-        this.UpgradeButton = new cc.Menu(upgrade);
-        this.UpgradeButton.setPosition(new cc.Point(600, 51.5));
-        this.addChild(this.UpgradeButton);
     },
 
     attack: function () {
@@ -219,10 +195,10 @@ var GameLayer = cc.LayerColor.extend({
         upPoint++;
 
         // FEATURE: 18/6/59 upgrade hp monster every level
-        this.setMonsterHp(monsterHpDefault + (13 * stage));
+        this.setMonsterHp(monsterHpDefault + (stage % 10 == 0 ? (30 * stage) : (13 * stage)));
         Monster.setPower(Monster.getPower());
 
-        this.stageLabel.setString('Stage: ' + stage);
+        this.stageLabel.setString('Stage: ' + (stage % 10 == 0 ? 'Boss(' + stage / 10 + ')!' : stage));
         this.upPointLabel.setString('Upgrade Point: ' + upPoint);
 
         // expend max level to 50
@@ -250,9 +226,34 @@ var GameLayer = cc.LayerColor.extend({
         cc.director.runScene(new GameOverScene());
     },
 
+    spAttackButton: function () {
+        const spAttack = new cc.MenuItemImage(
+            'res/Mechanic/SPAttackBtn.jpg',
+            'res/Mechanic/SPAttackBtn_push.jpg',
+            function () {
+                this.spAttack();
+            }, this);
+        this.SPButton = new cc.Menu(spAttack);
+        this.SPButton.setPosition(new cc.Point(screenWidth * 0.25, 51.5));
+        this.addChild(this.SPButton);
+    },
+
+    upgradeButton: function () {
+        const upgrade = new cc.MenuItemImage(
+            'res/Mechanic/UpgradeBtn.jpg',
+            'res/Mechanic/UpgradeBtn_push.jpg',
+            function () {
+                tapHere = false;
+                cc.director.runScene(new UpgradeScene());
+            }, this);
+        this.UpgradeButton = new cc.Menu(upgrade);
+        this.UpgradeButton.setPosition(new cc.Point(screenWidth * 0.75, 51.5));
+        this.addChild(this.UpgradeButton);
+    },
+
     createBar: function () {
         this.bar = new Guage();
-        this.bar.setPosition(new cc.Point(400, 150));
+        this.bar.setPosition(new cc.Point(screenWidth * 0.5, 150));
         this.addChild(this.bar);
     },
 
@@ -279,33 +280,33 @@ var GameLayer = cc.LayerColor.extend({
         this.hero.setPosition(new cc.Point(200, 350));
     },
 
+    createStageLabel: function () {
+        this.stageLabel = cc.LabelTTF.create('Stage: ' + stage, 'Arial', 30);
+        this.stageLabel.setPosition(new cc.Point(screenWidth * 0.5, 550));
+        this.addChild(this.stageLabel);
+    },
+
     createHeroLabel: function () {
         this.heroLabel = cc.LabelTTF.create('HP: ' + Hero.getHp().toFixed(2), 'Arial', 40);
-        this.heroLabel.setPosition(new cc.Point(200, 500));
+        this.heroLabel.setPosition(new cc.Point(screenWidth * 0.25, 500));
         this.addChild(this.heroLabel);
     },
 
     createMonsterLabel: function () {
         this.monsterLabel = cc.LabelTTF.create('HP: ' + Monster.getHp().toFixed(2), 'Arial', 40);
-        this.monsterLabel.setPosition(new cc.Point(600, 500));
+        this.monsterLabel.setPosition(new cc.Point(screenWidth * 0.75, 500));
         this.addChild(this.monsterLabel);
-    },
-
-    createStageLabel: function () {
-        this.stageLabel = cc.LabelTTF.create('Stage: ' + stage, 'Arial', 30);
-        this.stageLabel.setPosition(new cc.Point(400, 550));
-        this.addChild(this.stageLabel);
     },
 
     createSPLabel: function () {
         this.spLabel = cc.LabelTTF.create('SP charge: ' + (countSuccess < 5 ? countSuccess : 'MAX(' + (countSuccess - 4) + ')'), 'Arial', 30);
-        this.spLabel.setPosition(new cc.Point(200, 220));
+        this.spLabel.setPosition(new cc.Point(screenWidth * 0.25, 220));
         this.addChild(this.spLabel);
     },
 
     createUpgradePointLabel: function () {
         this.upPointLabel = cc.LabelTTF.create('Upgrade Point: ' + upPoint, 'Arial', 30);
-        this.upPointLabel.setPosition(new cc.Point(600, 220));
+        this.upPointLabel.setPosition(new cc.Point(screenWidth * 0.75, 220));
         this.addChild(this.upPointLabel);
     },
 
@@ -346,7 +347,7 @@ var maxStage = 10;
 // default value
 var heroHpDefault = 100;
 var heroPowerDefault = 10;
-var monsterHpDefault = 50;
+var monsterHpDefault = 30;
 var monsterPowerDefault = 7;
 // update point
 var upPoint = 0;
