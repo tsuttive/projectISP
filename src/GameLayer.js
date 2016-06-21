@@ -8,7 +8,6 @@ var GameLayer = cc.LayerColor.extend({
         // update
         this.scheduleUpdate();
         // button
-        this.attackCommand();
         this.spAttackCommand();
         this.upgradeCommand();
         // other
@@ -25,7 +24,6 @@ var GameLayer = cc.LayerColor.extend({
         this.createMonsterLabel();
         this.createStageLabel();
         this.createSPLabel();
-        this.createSPHitLabel();
         this.createMuteLabel();
     },
 
@@ -107,41 +105,28 @@ var GameLayer = cc.LayerColor.extend({
         this.monsterLabel.setString('HP: ' + Monster.getHp().toFixed(2));
     },
 
-    // FIXME: 18/6/59 press user press button, program will delay a little
-    attackCommand: function () {
-        const attack = new cc.MenuItemImage(
-            'res/Mechanic/DefendBtn.jpg',
-            'res/Mechanic/DefendBtn_push.jpg',
-            function () {
-                this.attack();
-            }, this);
-        this.attackButton = new cc.Menu(attack);
-        this.attackButton.setPosition(new cc.Point(135, 51.5));
-        this.addChild(this.attackButton);
-    },
-
     spAttackCommand: function () {
-        const SPAttack = new cc.MenuItemImage(
+        const spAttack = new cc.MenuItemImage(
             'res/Mechanic/SPAttackBtn.jpg',
             'res/Mechanic/SPAttackBtn_push.jpg',
             function () {
                 this.spAttack();
             }, this);
-        this.SPButton = new cc.Menu(SPAttack);
-        this.SPButton.setPosition(new cc.Point(402.5, 51.5));
+        this.SPButton = new cc.Menu(spAttack);
+        this.SPButton.setPosition(new cc.Point(200, 51.5));
         this.addChild(this.SPButton);
     },
 
     upgradeCommand: function () {
-        this.Upgrade = new cc.MenuItemImage(
+        const upgrade = new cc.MenuItemImage(
             'res/Mechanic/UpgradeBtn.jpg',
             'res/Mechanic/UpgradeBtn_push.jpg',
             function () {
                 tapHere = false;
                 cc.director.runScene(new UpgradeScene());
             }, this);
-        this.UpgradeButton = new cc.Menu(this.Upgrade);
-        this.UpgradeButton.setPosition(new cc.Point(665, 51.5));
+        this.UpgradeButton = new cc.Menu(upgrade);
+        this.UpgradeButton.setPosition(new cc.Point(600, 51.5));
         this.addChild(this.UpgradeButton);
     },
 
@@ -197,11 +182,6 @@ var GameLayer = cc.LayerColor.extend({
         }
 
         this.spLabel.setString('SP charge: ' + (countSuccess < 5 ? countSuccess : 'MAX(' + (countSuccess - 4) + ')'));
-
-        if (SPHit > 0) {
-            SPHit--;
-            this.spHitLabel.setString('SP Hit: ' + SPHit);
-        }
 
         if (this.hero.isDead())
             this.gameOver();
@@ -261,7 +241,6 @@ var GameLayer = cc.LayerColor.extend({
         this.stageLabel.setString('Stage: ' + stage);
         this.spLabel.setString('SP charge: ' + countSuccess);
         this.upPointLabel.setString('Upgrade Point: ' + upPoint);
-        this.spHitLabel.setString('SP Hit: ' + SPHit);
 
         cc.director.runScene(new GameOverScene());
     },
@@ -315,19 +294,13 @@ var GameLayer = cc.LayerColor.extend({
 
     createSPLabel: function () {
         this.spLabel = cc.LabelTTF.create('SP charge: ' + (countSuccess < 5 ? countSuccess : 'MAX(' + (countSuccess - 4) + ')'), 'Arial', 30);
-        this.spLabel.setPosition(new cc.Point(400, 220));
+        this.spLabel.setPosition(new cc.Point(200, 220));
         this.addChild(this.spLabel);
-    },
-
-    createSPHitLabel: function () {
-        this.spHitLabel = cc.LabelTTF.create('SP Hit: ' + SPHit, 'Arial', 30);
-        this.spHitLabel.setPosition(new cc.Point(150, 220));
-        this.addChild(this.spHitLabel);
     },
 
     createUpgradePointLabel: function () {
         this.upPointLabel = cc.LabelTTF.create('Upgrade Point: ' + upPoint, 'Arial', 30);
-        this.upPointLabel.setPosition(new cc.Point(665, 220));
+        this.upPointLabel.setPosition(new cc.Point(600, 220));
         this.addChild(this.upPointLabel);
     },
 
@@ -372,8 +345,6 @@ var monsterHpDefault = 50;
 var monsterPowerDefault = 7;
 // update point
 var upPoint = 0;
-// SPAttack count
-var SPHit = 0;
 // charge attack
 var countSuccess = 0;
 // object speed

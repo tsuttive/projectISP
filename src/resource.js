@@ -2,13 +2,13 @@ var res = {
     // images
     title_jpg: "res/Others/HowToPlay.jpg",
     bg_png: "res/Others/bg.png",
-    guage_jpg: "res/Mechanic/bar.jpg",
+    bar_jpg: "res/Mechanic/bar.jpg",
     tap_png: "res/Mechanic/tap.png",
     //button
     defendButton_jpg: "res/Mechanic/DefendBtn.jpg",
     defendButtonPush_jpg: "res/Mechanic/DefendBtn_push.jpg",
-    spButton_jpg: "res/Mechanic/SpAttackBtn.jpg",
-    spButtonPush_jpg: "res/Mechanic/SpAttackBtn_push.jpg",
+    spButton_jpg: "res/Mechanic/SPAttackBtn.jpg",
+    spButtonPush_jpg: "res/Mechanic/SPAttackBtn_push.jpg",
     UpgradeButton_jpg: "res/Mechanic/UpgradeBtn.jpg",
     UpgradeButtonPush_jpg: "res/Mechanic/UpgradeBtn_push.jpg",
     UpgradePointButton_jpg: "res/Mechanic/UpgradePointBtn.jpg",

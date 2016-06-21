@@ -13,7 +13,7 @@
   "jsList": [
     "src/resource.js",
     "src/GameLayer.js",
-    "src/Guage.js",
+    "src/Bar.js",
     "src/Tap.js",
     "src/Hero.js",
     "src/Monster.js",
