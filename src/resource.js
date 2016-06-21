@@ -2,7 +2,7 @@ var res = {
     // images
     title_jpg: "res/Others/HowToPlay.jpg",
     bg_png: "res/Others/bg.png",
-    guage_jpg: "res/Mechanic/guage.jpg",
+    guage_jpg: "res/Mechanic/bar.jpg",
     tap_png: "res/Mechanic/tap.png",
     //button
     defendButton_jpg: "res/Mechanic/DefendBtn.jpg",

@@ -13,7 +13,7 @@ var GameLayer = cc.LayerColor.extend({
         this.upgradeCommand();
         // other
         this.createBg();
-        this.createGuage();
+        this.createBar();
         this.createTap();
         this.createCharacter();
         // Effect
@@ -149,7 +149,7 @@ var GameLayer = cc.LayerColor.extend({
         if (tapHere) {
             this.tap.stop();
             // hero isAttack
-            if (this.tap.closeTo(this.guage)) {
+            if (this.tap.closeTo(this.bar)) {
                 this.heroAttack(1);
                 // monster isAttack
             } else {
@@ -266,10 +266,10 @@ var GameLayer = cc.LayerColor.extend({
         cc.director.runScene(new GameOverScene());
     },
 
-    createGuage: function () {
-        this.guage = new Guage();
-        this.guage.setPosition(new cc.Point(400, 150));
-        this.addChild(this.guage);
+    createBar: function () {
+        this.bar = new Guage();
+        this.bar.setPosition(new cc.Point(400, 150));
+        this.addChild(this.bar);
     },
 
     createBg: function () {
