@@ -14,9 +14,11 @@ I start to renovate my friend game because i see when he present his game, it's 
 #### Version 0 log:
 
 - 0.0.1 <- change the way to attack
-- 0.0.2 <- add sound
-- 0.0.4 <- renovate `upgrade page`, add `speed` upgrade
+    - 0.0.2 <- add sound
+    - 0.0.4 <- renovate `upgrade page`, add `speed` upgrade
 - 0.1.0 <- expend top level to `50`
+    - 0.1.1 <- fixed some bug
+- 0.2.0 <- add boss enemy n every 10 stage
 
 ### What is this repository for? ###
 

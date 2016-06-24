@@ -89,6 +89,7 @@ var GameLayer = cc.LayerColor.extend({
         // debug code
         if (keyCode == cc.KEY.s) {
             console.info("----------------------------------");
+            console.info("high stage ever: " + localStorage.getItem("stage"));
             console.info("stage: " + stage + "/" + maxStage);
             console.info("speed: " + Tap.getSpeed());
             console.info("tSpeed: " + tSpeed);
@@ -98,6 +99,8 @@ var GameLayer = cc.LayerColor.extend({
             console.info("monster hp: " + Monster.getHp());
             console.info("monster power: " + Monster.getPower());
             console.info("----------------------------------");
+
+            localStorage.clear();
         }
     },
 
@@ -194,16 +197,15 @@ var GameLayer = cc.LayerColor.extend({
         stage++;
         upPoint++;
 
-        // FEATURE: 18/6/59 upgrade hp monster every level
+        // FEATURE: 18/6/59 upgrade hp / power monster every level
         this.setMonsterHp(monsterHpDefault + (stage % 10 == 0 ? (30 * stage) : (13 * stage)));
-        Monster.setPower(Monster.getPower());
+        Monster.setPower(Monster.getPower() + 0.5);
 
         this.stageLabel.setString('Stage: ' + (stage % 10 == 0 ? 'Boss(' + stage / 10 + ')!' : stage));
         this.upPointLabel.setString('Upgrade Point: ' + upPoint);
 
         // expend max level to 50
         if (stage > maxStage) {
-            gameClear = true;
             this.gameOver();
         }
     },
@@ -311,7 +313,7 @@ var GameLayer = cc.LayerColor.extend({
     },
 
     createMuteLabel: function () {
-        this.muteLabel = cc.LabelTTF.create('', 'Arial', 20);
+        this.muteLabel = cc.LabelTTF.create(sound ? '' : 'Mute', 'Arial', 20);
         this.muteLabel.setPosition(new cc.Point(screenWidth - 50, screenHeight - 50));
         this.muteLabel.setColor(cc.color(255, 0, 0));
         this.addChild(this.muteLabel);
@@ -359,5 +361,3 @@ var tSpeed = 1;
 var tapHere = false;
 // is sound or mute
 var sound = true;
-// is game clear
-var gameClear = false;
