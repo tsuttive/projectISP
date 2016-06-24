@@ -114,6 +114,10 @@ var GameLayer = cc.LayerColor.extend({
         this.monsterLabel.setString('HP: ' + Monster.getHp().toFixed(2));
     },
 
+    isBoss: function () {
+        return stage % 10 == 0;
+    },
+
     attack: function () {
         if (tapHere) {
             this.tap.stop();
@@ -195,19 +199,26 @@ var GameLayer = cc.LayerColor.extend({
     passTheLevel: function () {
         cc.audioEngine.playEffect('res/music/died.mp3');
         stage++;
-        upPoint++;
 
-        // FEATURE: 18/6/59 upgrade hp / power monster every level
-        this.setMonsterHp(monsterHpDefault + (stage % 10 == 0 ? (30 * stage) : (13 * stage)));
-        Monster.setPower(Monster.getPower() + 0.5);
-
-        this.stageLabel.setString('Stage: ' + (stage % 10 == 0 ? 'Boss(' + stage / 10 + ')!' : stage));
-        this.upPointLabel.setString('Upgrade Point: ' + upPoint);
+        // FEATURE: 18/6/59 upgrade hp / power monster every level (add boss)
+        if (this.isBoss()) {
+            upPoint += 3;
+            this.setMonsterHp(monsterHpDefault + (24 * stage));
+            Monster.setPower(monsterPowerDefault + (1.2 * stage));
+            maxStage += 10;
+        } else {
+            upPoint += 1;
+            this.setMonsterHp(monsterHpDefault + (9 * stage));
+            Monster.setPower(monsterPowerDefault + (0.2 * stage));
+        }
 
         // expend max level to 50
         if (stage > maxStage) {
             this.gameOver();
         }
+
+        this.stageLabel.setString('Stage: ' + (stage % 10 == 0 ? 'Boss(' + stage / 10 + ')!' : stage));
+        this.upPointLabel.setString('Upgrade Point: ' + upPoint);
     },
 
     gameOver: function () {
@@ -348,9 +359,9 @@ var stage = 1;
 var maxStage = 10;
 // default value
 var heroHpDefault = 100;
-var heroPowerDefault = 10;
+var heroPowerDefault = 15;
 var monsterHpDefault = 30;
-var monsterPowerDefault = 7;
+var monsterPowerDefault = 3;
 // update point
 var upPoint = 0;
 // charge attack

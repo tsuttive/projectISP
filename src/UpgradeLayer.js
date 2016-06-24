@@ -12,7 +12,7 @@ var UpgradeLayer = cc.LayerColor.extend({
         this.speedButton();
         this.addKeyboardHandlers();
     },
-    
+
     addKeyboardHandlers: function () {
         var self = this;
         cc.eventManager.addListener({
@@ -35,7 +35,7 @@ var UpgradeLayer = cc.LayerColor.extend({
             this.speedUpgrade();
         }
 
-        if (keyCode == cc.KEY.e) {
+        if (keyCode == cc.KEY.escape) {
             cc.director.runScene(new StartScene());
         }
     },
