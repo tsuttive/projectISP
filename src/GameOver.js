@@ -15,12 +15,16 @@ var GameOverLayer = cc.LayerColor.extend({
             this.stageLabel.setString('Keep Trying!!');
         } else {
             const current = stage - 1;
-            // save highest stage
+            // save highest stage in local storage
             if (localStorage.getItem("stage") < current) {
                 localStorage.setItem("stage", current);
             }
-
             var historyStage = localStorage.getItem("stage");
+
+            // save highest stage in fireBase storage
+            this.writeUserData(historyStage);
+
+
             this.highStageLabel.setString('The Highest stage ever is  ' + historyStage);
             this.stageLabel.setString('The Highest stage on this play is  ' + current);
         }
@@ -54,6 +58,13 @@ var GameOverLayer = cc.LayerColor.extend({
         powerUpgrade = 0;
         speedUpgrade = 0;
         cc.director.runScene(cc.TransitionCrossFade.create(0.5, new TitleScene()));
+    },
+
+    writeUserData: function (a) {
+        console.log(a);
+        firebase.database().ref('/').set({
+            stage: Number(a)
+        });
     },
 
     createReplayButton: function () {

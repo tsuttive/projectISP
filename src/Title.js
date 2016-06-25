@@ -25,7 +25,21 @@ var TitleLayer = cc.LayerColor.extend({
     },
 
     play: function () {
-        cc.director.runScene(cc.TransitionCrossFade.create(0.5, new StartScene()));
+        // FEATURE: 25/6/59 login via facebook (redirect)
+        var provider = new firebase.auth.FacebookAuthProvider();
+
+        firebase.auth().signInWithPopup(provider).then(function (result) {
+            var user = result.user;
+            if (user) {
+                cc.director.runScene(cc.TransitionCrossFade.create(0.5, new StartScene()));
+                console.log(user.displayName);
+                console.log(user.email);
+            }
+        }).catch(function (error) {
+            console.error("contact developer to fix this.");
+            console.error(error.code);
+            console.error(error.message);
+        });
     },
 
     createButton: function () {
