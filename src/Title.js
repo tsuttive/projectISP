@@ -25,21 +25,21 @@ var TitleLayer = cc.LayerColor.extend({
     },
 
     play: function () {
-        // FEATURE: 25/6/59 login via facebook (redirect)
-        var provider = new firebase.auth.FacebookAuthProvider();
+        // FEATURE: 25/6/59 login via facebook or guest
+        var guest = confirm("Sign in facebook account, to keep your high score.\nor you can play like guest but no any data will keep.\nDo you want to play like guest member");
 
-        firebase.auth().signInWithPopup(provider).then(function (result) {
-            var user = result.user;
-            if (user) {
-                cc.director.runScene(cc.TransitionCrossFade.create(0.5, new StartScene()));
-                console.log(user.displayName);
-                console.log(user.email);
-            }
-        }).catch(function (error) {
-            console.error("contact developer to fix this.");
-            console.error(error.code);
-            console.error(error.message);
-        });
+        if (guest) {
+            firebase.auth().signInAnonymously();
+        } else {
+            var provider = new firebase.auth.FacebookAuthProvider();
+            firebase.auth().signInWithPopup(provider);
+        }
+
+        if (firebase.auth().currentUser) {
+            console.log(firebase.auth().currentUser.displayName ? firebase.auth().currentUser.displayName : "guest");
+            console.log(firebase.auth().currentUser.email ? firebase.auth().currentUser.email : "guest@guest.com");
+            cc.director.runScene(cc.TransitionCrossFade.create(0.5, new StartScene()));
+        }
     },
 
     createButton: function () {
