@@ -26,16 +26,24 @@ var TitleLayer = cc.LayerColor.extend({
 
     play: function () {
         // FEATURE: 25/6/59 login via facebook or guest
-        var guest = confirm("Sign in facebook account, to keep your high score.\nor you can play like guest but no any data will keep.\nDo you want to play like guest member");
+        var facebook = confirm("Sign in facebook account, to keep your high score.\nor you can play like guest but no any data will keep.\nDo you want to login facebook");
 
-        if (guest) {
-            firebase.auth().signInAnonymously();
-        } else {
+        if (facebook) {
             var provider = new firebase.auth.FacebookAuthProvider();
             firebase.auth().signInWithPopup(provider);
+            console.info("login as facebook");
+        } else {
+            firebase.auth().signInAnonymously();
+            console.info("login as anonymously");
         }
 
-        if (firebase.auth().currentUser) {
+        firebase.auth().onAuthStateChanged(function (user) {
+            if (user) this.openStartScene(user);
+        });
+    },
+
+    openStartScene: function (user) {
+        if (user) {
             console.log(firebase.auth().currentUser.displayName ? firebase.auth().currentUser.displayName : "guest");
             console.log(firebase.auth().currentUser.email ? firebase.auth().currentUser.email : "guest@guest.com");
             cc.director.runScene(cc.TransitionCrossFade.create(0.5, new StartScene()));

@@ -89,6 +89,9 @@ var GameLayer = cc.LayerColor.extend({
         // debug code
         if (keyCode == cc.KEY.s) {
             console.info("----------------------------------");
+            console.info(firebase.auth().currentUser.displayName);
+            console.info(firebase.auth().currentUser.email);
+            console.info("----------------------------------");
             console.info("high stage ever: " + localStorage.getItem("stage"));
             console.info("stage: " + stage + "/" + maxStage);
             console.info("speed: " + Tap.getSpeed());
