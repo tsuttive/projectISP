@@ -106,3 +106,30 @@ var checkBrowser = function () {
         alert('unknown');
     }
 };
+
+var myIP = function (getText) {
+    if (window.XMLHttpRequest) xmlhttp = new XMLHttpRequest();
+    else xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+
+    xmlhttp.open("GET", "//ip-api.com/json?callback=?", false);
+    xmlhttp.send();
+
+    var text = xmlhttp.responseText;
+    text = text.slice(3, text.length - 3);
+
+    hostipInfo = text.split(",");
+    for (var i = 0; i < hostipInfo.length; i++) {
+        while (hostipInfo[i].indexOf("\"") != -1) {
+            hostipInfo[i] = hostipInfo[i].replace("\"", "");
+        }
+    }
+
+    for (i = 0; hostipInfo.length >= i; i++) {
+        ipAddress = hostipInfo[i].split(":");
+        if (ipAddress[0] == getText) {
+            return ipAddress[1].replace(" ", "");
+        }
+    }
+
+    return false;
+};

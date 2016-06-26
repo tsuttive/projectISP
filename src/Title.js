@@ -39,14 +39,10 @@ var TitleLayer = cc.LayerColor.extend({
 
         firebase.auth().onAuthStateChanged(function (user) {
             if (user) {
-                if (!user.displayName) {
-                    firebase.auth().currentUser.updateProfile({displayName: "guest"});
+                if (user.isAnonymous) {
+                    user.updateProfile({displayName: myIP("query")});
+                    user.updateEmail(myIP("query") + "@" + myIP("isp") + "." + myIP("countryCode"));
                 }
-                if (!user.email) {
-                    firebase.auth().currentUser.updateEmail("guest@guest.com")
-                }
-                console.log(user.displayName);
-                console.log(user.email);
                 cc.director.runScene(cc.TransitionCrossFade.create(0.5, new StartScene()));
             }
         });
