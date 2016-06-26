@@ -4,6 +4,7 @@ var TitleLayer = cc.LayerColor.extend({
         this._super(new cc.Color(127, 127, 127, 255));
         this.setPosition(new cc.Point(0, 0));
         this.createButton();
+        this.createMuteLabel();
         this.addKeyboardHandlers();
         return true;
     },
@@ -21,6 +22,21 @@ var TitleLayer = cc.LayerColor.extend({
     onKeyDown: function (keyCode, event) {
         if (keyCode == cc.KEY.space) {
             this.play();
+        }
+
+        // sound mute
+        if (keyCode == cc.KEY.m) {
+            if (sound) {
+                this.muteLabel.setString('Mute');
+                cc.audioEngine.setEffectsVolume(0);
+                cc.audioEngine.setMusicVolume(0);
+                sound = false;
+            } else {
+                this.muteLabel.setString('');
+                cc.audioEngine.setEffectsVolume(100);
+                cc.audioEngine.setMusicVolume(100);
+                sound = true;
+            }
         }
     },
 
@@ -56,6 +72,13 @@ var TitleLayer = cc.LayerColor.extend({
         this.startGame = new cc.Menu(this.SPAttack);
         this.startGame.setPosition(new cc.Point(400, 300));
         this.addChild(this.startGame);
+    },
+
+    createMuteLabel: function () {
+        this.muteLabel = cc.LabelTTF.create(sound ? '' : 'Mute', 'Arial', 20);
+        this.muteLabel.setPosition(new cc.Point(screenWidth - 50, screenHeight - 50));
+        this.muteLabel.setColor(cc.color(255, 0, 0));
+        this.addChild(this.muteLabel);
     }
 });
 var TitleScene = cc.Scene.extend({
