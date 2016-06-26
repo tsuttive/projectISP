@@ -38,16 +38,18 @@ var TitleLayer = cc.LayerColor.extend({
         }
 
         firebase.auth().onAuthStateChanged(function (user) {
-            if (user) this.openStartScene(user);
+            if (user) {
+                if (!user.displayName) {
+                    firebase.auth().currentUser.updateProfile({displayName: "guest"});
+                }
+                if (!user.email) {
+                    firebase.auth().currentUser.updateEmail("guest@guest.com")
+                }
+                console.log(user.displayName);
+                console.log(user.email);
+                cc.director.runScene(cc.TransitionCrossFade.create(0.5, new StartScene()));
+            }
         });
-    },
-
-    openStartScene: function (user) {
-        if (user) {
-            console.log(firebase.auth().currentUser.displayName ? firebase.auth().currentUser.displayName : "guest");
-            console.log(firebase.auth().currentUser.email ? firebase.auth().currentUser.email : "guest@guest.com");
-            cc.director.runScene(cc.TransitionCrossFade.create(0.5, new StartScene()));
-        }
     },
 
     createButton: function () {
