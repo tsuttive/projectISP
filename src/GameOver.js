@@ -21,10 +21,6 @@ var GameOverLayer = cc.LayerColor.extend({
             }
             var historyStage = localStorage.getItem("stage");
 
-            // save highest stage in fireBase storage
-            this.writeUserData(historyStage);
-
-
             this.highStageLabel.setString('The Highest stage ever is  ' + historyStage);
             this.stageLabel.setString('The Highest stage on this play is  ' + current);
         }
@@ -60,19 +56,12 @@ var GameOverLayer = cc.LayerColor.extend({
         cc.director.runScene(cc.TransitionCrossFade.create(0.5, new TitleScene()));
     },
 
-    writeUserData: function (a) {
-        console.log(a);
-        firebase.database().ref('/').set({
-            stage: Number(a)
-        });
-    },
-
     createReplayButton: function () {
-        this.SPAttack = new cc.MenuItemImage(
+        this.button = new cc.MenuItemImage(
             'res/Mechanic/RestartBtn.jpg',
             'res/Mechanic/RestartBtn_push.jpg',
             this.replay, this);
-        this.startGame = new cc.Menu(this.SPAttack);
+        this.startGame = new cc.Menu(this.button);
         this.startGame.setPosition(new cc.Point(screenWidth / 2, 100));
         this.addChild(this.startGame);
     },

@@ -25,6 +25,7 @@ var GameLayer = cc.LayerColor.extend({
         this.createStageLabel();
         this.createSPLabel();
         this.createMuteLabel();
+        this.createPlayerNameLabel();
     },
 
     addKeyboardHandlers: function () {
@@ -235,6 +236,13 @@ var GameLayer = cc.LayerColor.extend({
         this.tap.stop();
         this.tap.resetSpeed();
 
+        // delete anonymous user when game over
+        if (firebase.auth().currentUser.isAnonymous) {
+            firebase.auth().currentUser.delete().then(function () {
+                console.info("good bye anonymous");
+            });
+        }
+
         this.stageLabel.setString('Stage: ' + stage);
         this.spLabel.setString('SP charge: ' + countSuccess);
         this.upPointLabel.setString('Upgrade Point: ' + upPoint);
@@ -331,6 +339,13 @@ var GameLayer = cc.LayerColor.extend({
         this.muteLabel.setPosition(new cc.Point(screenWidth - 50, screenHeight - 50));
         this.muteLabel.setColor(cc.color(255, 0, 0));
         this.addChild(this.muteLabel);
+    },
+
+    createPlayerNameLabel: function () {
+        var user = firebase.auth().currentUser;
+        this.nameLabel = cc.LabelTTF.create(user.displayName, 'Arial', 20);
+        this.nameLabel.setPosition(new cc.Point(100, screenHeight - 50));
+        this.addChild(this.nameLabel);
     },
 
     createHeroEffect: function () {

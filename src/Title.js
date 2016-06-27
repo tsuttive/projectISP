@@ -41,35 +41,55 @@ var TitleLayer = cc.LayerColor.extend({
     },
 
     play: function () {
-        // FEATURE: 25/6/59 login via facebook or guest
-        var facebook = confirm("Sign in facebook account, to keep your high score.\nor you can play like guest but no any data will keep.\nDo you want to login facebook");
+        if (!firebase.auth().currentUser) {
+            // FEATURE: 25/6/59 login via facebook or guest
+            var facebook = confirm("Sign in facebook account, to keep your high score.\nor you can play like guest but no any data will keep.\nDo you want to login facebook");
+            // disable button when game loading
+            this.startGame.setEnabled(false);
+            // show loading label
+            this.createLoadingLabel();
 
-        if (facebook) {
-            var provider = new firebase.auth.FacebookAuthProvider();
-            firebase.auth().signInWithPopup(provider);
-            console.info("login as facebook");
-        } else {
-            firebase.auth().signInAnonymously();
-            console.info("login as anonymously");
-        }
+            if (facebook) {
+                this.loginViaFacebook();
+            } else {
+                this.loginViaAnonymous();
+            }
+        } else cc.director.runScene(cc.TransitionCrossFade.create(0.5, new StartScene()));
+    },
+
+    loginViaFacebook: function () {
+        var provider = new firebase.auth.FacebookAuthProvider();
+        firebase.auth().signInWithPopup(provider).then(function (result) {
+            cc.director.runScene(cc.TransitionCrossFade.create(0.5, new StartScene()));
+        });
+
+        console.info("login as facebook");
+    },
+
+    loginViaAnonymous: function () {
+        firebase.auth().signInAnonymously();
 
         firebase.auth().onAuthStateChanged(function (user) {
             if (user) {
                 if (user.isAnonymous) {
-                    user.updateProfile({displayName: myIP("query")});
-                    user.updateEmail(myIP("query") + "__" + Math.ceil(Math.random() * 100000) + "@" + myIP("isp") + "." + myIP("countryCode"));
+                    user.updateProfile({displayName: myIP("query")}).then(function () {
+                        // Update name successful.
+                        cc.director.runScene(cc.TransitionCrossFade.create(0.5, new StartScene()));
+                    });
                 }
-                cc.director.runScene(cc.TransitionCrossFade.create(0.5, new StartScene()));
             }
         });
+
+
+        console.info("login as anonymously");
     },
 
     createButton: function () {
-        this.SPAttack = new cc.MenuItemImage(
+        this.button = new cc.MenuItemImage(
             'res/Others/HowToPlay.jpg',
             'res/Others/HowToPlay.jpg',
             this.play, this);
-        this.startGame = new cc.Menu(this.SPAttack);
+        this.startGame = new cc.Menu(this.button);
         this.startGame.setPosition(new cc.Point(400, 300));
         this.addChild(this.startGame);
     },
@@ -79,6 +99,13 @@ var TitleLayer = cc.LayerColor.extend({
         this.muteLabel.setPosition(new cc.Point(screenWidth - 50, screenHeight - 50));
         this.muteLabel.setColor(cc.color(255, 0, 0));
         this.addChild(this.muteLabel);
+    },
+
+    createLoadingLabel: function () {
+        this.loadingLabel = cc.LabelTTF.create("Loading. . .", 'Arial', 50);
+        this.loadingLabel.setPosition(new cc.Point(screenWidth / 2, screenHeight / 2));
+        this.loadingLabel.setColor(cc.color(255, 0, 0));
+        this.addChild(this.loadingLabel);
     }
 });
 var TitleScene = cc.Scene.extend({
