@@ -17,15 +17,8 @@ var GameOverLayer = cc.LayerColor.extend({
         if (stage <= 1) {
             this.stageLabel.setString('Keep Trying!!');
         } else {
-            // update only this.player beat score at server
-            if (historyData.stage < current) {
-                this.writeUserData(current);
-                this.updateData();
-            }
-
             this.stageLabel.setString('The Highest stage on this play is  ' + current);
         }
-        this.highStageLabel.setString('The Highest stage ever \nfrom ' + historyData.name + ' is ' + historyData.stage);
         this.deleteAnonymous();
         return true;
     },
@@ -58,24 +51,23 @@ var GameOverLayer = cc.LayerColor.extend({
         cc.director.runScene(cc.TransitionCrossFade.create(0.5, new TitleScene()));
     },
 
-    updateData: function () {
-        // update history from current
-        historyData.stage = current;
-        historyData.name = firebase.auth().currentUser.displayName;
-    },
-
-    writeUserData: function (current) {
-        firebase.database().ref('/').set({
-            name: firebase.auth().currentUser.displayName,
-            stage: Number(current)
-        });
-    },
-
     readUserData: function () {
         current = stage - 1;
         firebase.database().ref('/').once('value').then(function (snapshot) {
             historyData.name = snapshot.val().name;
             historyData.stage = snapshot.val().stage;
+            // update only this.player beat score at server
+            if (historyData.stage < current) {
+                // update new high score
+                firebase.database().ref('/').update({
+                    name: firebase.auth().currentUser.displayName,
+                    stage: Number(current)
+                });
+                historyData.stage = current;
+                historyData.name = firebase.auth().currentUser.displayName;
+            }
+            // update label with high score
+            GameOverLayer.highStageLabel.setString('The Highest stage ever \nfrom ' + historyData.name + ' is ' + historyData.stage);
         });
     },
 
@@ -99,9 +91,9 @@ var GameOverLayer = cc.LayerColor.extend({
     },
 
     createHighScoreLabel: function () {
-        this.highStageLabel = cc.LabelTTF.create('', 'Arial', 40);
-        this.highStageLabel.setPosition(new cc.Point(screenWidth / 2, screenHeight - 100));
-        this.addChild(this.highStageLabel);
+        GameOverLayer.highStageLabel = cc.LabelTTF.create('', 'Arial', 40);
+        GameOverLayer.highStageLabel.setPosition(new cc.Point(screenWidth / 2, screenHeight - 100));
+        this.addChild(GameOverLayer.highStageLabel);
     },
 
     createScoreLabel: function () {
