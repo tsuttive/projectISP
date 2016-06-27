@@ -43,7 +43,7 @@ var TitleLayer = cc.LayerColor.extend({
     play: function () {
         if (!firebase.auth().currentUser) {
             // FEATURE: 25/6/59 login via facebook be a guest
-            var facebook = confirm("Sign in facebook account, to keep your high score.\nor you can play like guest but no any data will keep.\nDo you want to login facebook");
+            var facebook = confirm("Sign in facebook account or guest, to keep your high score(guest will keep by using ip-address).\nDo you want to login facebook");
             // disable button when game loading
             this.startGame.setEnabled(false);
             // show loading label

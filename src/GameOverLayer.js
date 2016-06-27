@@ -1,5 +1,6 @@
 var GameOverLayer = cc.LayerColor.extend({
-
+    var: historyData = {name: "", stage: 0},
+    var: current = 0,
     init: function () {
         this._super(new cc.Color(220, 20, 60, 255));
         this.setPosition(new cc.Point(0, 0));
@@ -8,23 +9,24 @@ var GameOverLayer = cc.LayerColor.extend({
         this.createHighScoreLabel();
         this.createReplayButton();
 
+        this.readUserData();
+
         this.addKeyboardHandlers();
 
         // check can win at least 1 stage?
         if (stage <= 1) {
             this.stageLabel.setString('Keep Trying!!');
         } else {
-            const current = stage - 1;
-            // save highest stage in local storage
-            if (localStorage.getItem("stage") < current) {
-                localStorage.setItem("stage", current);
+            // update only this.player beat score at server
+            if (historyData.stage < current) {
+                this.writeUserData(current);
+                this.updateData();
             }
-            var historyStage = localStorage.getItem("stage");
 
-            this.highStageLabel.setString('The Highest stage ever is  ' + historyStage);
             this.stageLabel.setString('The Highest stage on this play is  ' + current);
         }
-
+        this.highStageLabel.setString('The Highest stage ever \nfrom ' + historyData.name + ' is ' + historyData.stage);
+        this.deleteAnonymous();
         return true;
     },
 
@@ -33,12 +35,12 @@ var GameOverLayer = cc.LayerColor.extend({
         cc.eventManager.addListener({
             event: cc.EventListener.KEYBOARD,
             onKeyPressed: function (keyCode, event) {
-                self.onKeyDown(keyCode, event);
+                self.onKeyDown(keyCode);
             }
         }, this);
     },
 
-    onKeyDown: function (keyCode, event) {
+    onKeyDown: function (keyCode) {
         if (keyCode == cc.KEY.space) {
             this.replay();
         }
@@ -54,6 +56,36 @@ var GameOverLayer = cc.LayerColor.extend({
         powerUpgrade = 0;
         speedUpgrade = 0;
         cc.director.runScene(cc.TransitionCrossFade.create(0.5, new TitleScene()));
+    },
+
+    updateData: function () {
+        // update history from current
+        historyData.stage = current;
+        historyData.name = firebase.auth().currentUser.displayName;
+    },
+
+    writeUserData: function (current) {
+        firebase.database().ref('/').set({
+            name: firebase.auth().currentUser.displayName,
+            stage: Number(current)
+        });
+    },
+
+    readUserData: function () {
+        current = stage - 1;
+        firebase.database().ref('/').once('value').then(function (snapshot) {
+            historyData.name = snapshot.val().name;
+            historyData.stage = snapshot.val().stage;
+        });
+    },
+
+    deleteAnonymous: function () {
+        // delete anonymous user when game over
+        if (firebase.auth().currentUser.isAnonymous) {
+            firebase.auth().currentUser.delete().then(function () {
+                console.info("good bye anonymous");
+            });
+        }
     },
 
     createReplayButton: function () {
@@ -78,6 +110,7 @@ var GameOverLayer = cc.LayerColor.extend({
         this.addChild(this.stageLabel);
     }
 });
+
 var GameOverScene = cc.Scene.extend({
     onEnter: function () {
         this._super();

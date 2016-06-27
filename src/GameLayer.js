@@ -89,21 +89,22 @@ var GameLayer = cc.LayerColor.extend({
 
         // debug code
         if (keyCode == cc.KEY.s) {
-            console.info("----------------------------------");
-            console.info(firebase.auth().currentUser.displayName);
-            console.info(firebase.auth().currentUser.email);
-            console.info("----------------------------------");
-            console.info("high stage ever: " + localStorage.getItem("stage"));
-            console.info("stage: " + stage + "/" + maxStage);
-            console.info("speed: " + Tap.getSpeed());
-            console.info("hero hp: " + Hero.getHp());
-            console.info("hero power: " + Hero.getPower());
-            console.info("hero sp-attack: " + ((Hero.getPower() * (countSuccess - 1)) < 0 ? 0 : (Hero.getPower() * (countSuccess - 1))));
-            console.info("monster hp: " + Monster.getHp());
-            console.info("monster power: " + Monster.getPower());
-            console.info("----------------------------------");
+            firebase.database().ref('/').once('value').then(function (snapshot) {
+                console.info("----------------------------------");
+                console.info(firebase.auth().currentUser.displayName);
+                console.info(firebase.auth().currentUser.email);
+                console.info("----------------------------------");
+                console.info("high stage ever: " + snapshot.val().name + " with " + snapshot.val().stage);
+                console.info("stage: " + stage + "/" + maxStage);
+                console.info("speed: " + Tap.getSpeed());
+                console.info("hero hp: " + Hero.getHp());
+                console.info("hero power: " + Hero.getPower());
+                console.info("hero sp-attack: " + ((Hero.getPower() * (countSuccess - 1)) < 0 ? 0 : (Hero.getPower() * (countSuccess - 1))));
+                console.info("monster hp: " + Monster.getHp());
+                console.info("monster power: " + Monster.getPower());
+                console.info("----------------------------------");
+            });
 
-            localStorage.clear();
         }
     },
 
@@ -236,13 +237,6 @@ var GameLayer = cc.LayerColor.extend({
 
         this.tap.stop();
         this.tap.resetSpeed();
-
-        // delete anonymous user when game over
-        if (firebase.auth().currentUser.isAnonymous) {
-            firebase.auth().currentUser.delete().then(function () {
-                console.info("good bye anonymous");
-            });
-        }
 
         this.stageLabel.setString('Stage: ' + stage);
         this.spLabel.setString('SP charge: ' + countSuccess);
