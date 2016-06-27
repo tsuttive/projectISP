@@ -57,7 +57,7 @@ var TitleLayer = cc.LayerColor.extend({
             if (user) {
                 if (user.isAnonymous) {
                     user.updateProfile({displayName: myIP("query")});
-                    user.updateEmail(myIP("query") + "@" + myIP("isp") + "." + myIP("countryCode"));
+                    user.updateEmail(myIP("query") + "__" + Math.ceil(Math.random() * 100000) + "@" + myIP("isp") + "." + myIP("countryCode"));
                 }
                 cc.director.runScene(cc.TransitionCrossFade.create(0.5, new StartScene()));
             }
