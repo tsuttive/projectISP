@@ -96,7 +96,6 @@ var GameLayer = cc.LayerColor.extend({
             console.info("high stage ever: " + localStorage.getItem("stage"));
             console.info("stage: " + stage + "/" + maxStage);
             console.info("speed: " + Tap.getSpeed());
-            console.info("tSpeed: " + tSpeed);
             console.info("hero hp: " + Hero.getHp());
             console.info("hero power: " + Hero.getPower());
             console.info("hero sp-attack: " + ((Hero.getPower() * (countSuccess - 1)) < 0 ? 0 : (Hero.getPower() * (countSuccess - 1))));
@@ -204,7 +203,9 @@ var GameLayer = cc.LayerColor.extend({
         cc.audioEngine.playEffect('res/music/died.mp3');
         stage++;
 
-        // FEATURE: 18/6/59 upgrade hp / power monster every level (add boss)
+        // FEATURE: 18/6/59 update hp (boss) -> 24*stage , (normal) -> 9*stage
+        // FEATURE: 27/6/59 update power (boss) -> 1.2*stage , (normal) -> 0.2*stage
+        // FEATURE: 27/6/59 update upPoint by 3, if it's boss
         if (this.isBoss()) {
             upPoint += 3;
             this.setMonsterHp(monsterHpDefault + (24 * stage));

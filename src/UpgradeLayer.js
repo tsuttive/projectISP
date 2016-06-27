@@ -48,7 +48,7 @@ var UpgradeLayer = cc.LayerColor.extend({
             const hp = (Hero.getHp() + (3 * hpUpgrade * stage)).toFixed(0);
             const futureHp = (3 * (hpUpgrade + 1) * stage).toFixed(0);
 
-            // FEATURE: 18/6/59 add hero when player add upgrade point
+            // FEATURE: 18/6/59 add hp (player upgrade)
             Hero.setHp(hp);
 
             this.upPointLabel.setString('Upgrade Point: ' + upPoint);
@@ -65,7 +65,7 @@ var UpgradeLayer = cc.LayerColor.extend({
             const power = (Hero.getPower() + ((3 / 2) * (powerUpgrade / 10) * (stage / 4))).toFixed(2);
             const futurePower = ((3 / 2) * ((powerUpgrade + 1) / 10) * (stage / 4)).toFixed(3);
 
-            // FEATURE: 18/6/59 add power of hero when player upgrade it
+            // FEATURE: 18/6/59 add power (player upgrade)
             Hero.setPower(power);
 
             this.upPointLabel.setString('Upgrade Point: ' + upPoint);
@@ -79,7 +79,7 @@ var UpgradeLayer = cc.LayerColor.extend({
                 speedUpgrade += 1;
                 upPoint -= 1;
 
-                // FEATURE: 18/6/59 decrease speed when user update speed
+                // FEATURE: 18/6/59 decrease speed (player upgrade)
                 Tap.decreaseSpeed();
 
                 this.upPointLabel.setString('Upgrade Point: ' + upPoint);
