@@ -1,379 +1,387 @@
 var GameLayer = cc.LayerColor.extend({
 
-    init: function() {
-        this._super( new cc.Color( 60, 179, 113, 255 ) );
-        this.setPosition( new cc.Point( 0, 0 ) );
-
+    init: function () {
+        this._super(new cc.Color(60, 179, 113, 255));
+        this.setPosition(new cc.Point(0, 0));
+        // keyboard
         this.addKeyboardHandlers();
+        // update
         this.scheduleUpdate();
+        // button
+        this.spAttackButton();
+        this.upgradeButton();
+        // other
         this.createBg();
-        this.createGuage();
+        this.createBar();
         this.createTap();
         this.createCharacter();
+        // Effect
+        this.createHeroEffect();
+        this.createMonsterEffect();
+        // label
+        this.createUpgradePointLabel();
         this.createHeroLabel();
         this.createMonsterLabel();
         this.createStageLabel();
         this.createSPLabel();
-        this.attackCommand();
-        this.spAttackCommand();
-        this.UpgradeCommand();
-        this.createUpgradePointLabel();
-        this.createSPHitLabel();
-        this.heroAttackEffect();
-        this.monsterAttackEffect();
+        this.createMuteLabel();
+        this.createPlayerNameLabel();
     },
 
-    onKeyDown: function( keyCode, event ) {
-        if (keyCode == cc.KEY.space && attackID == 1){
-            this.attackFn();
-
-        }
-        if(keyCode == cc.KEY.z){
-            this.shortcutOfAttackButton();
-
-
-        }
-        if (keyCode == cc.KEY.x && SPAttackID == 1 ) {
-            this.shortcutOfSPAttackButton();
-
-
-        }
-        if (keyCode == cc.KEY.c ) {
-            cc.director.runScene(new UpgradeScene());
-        }
-    },
-
-    onKeyUp: function( keyCode, event ) {
-
-    },
-
-    addKeyboardHandlers: function() {
+    addKeyboardHandlers: function () {
         var self = this;
         cc.eventManager.addListener({
             event: cc.EventListener.KEYBOARD,
-            onKeyPressed : function( keyCode, event ) {
-                self.onKeyDown( keyCode, event );
-            },
-            onKeyReleased: function( keyCode, event ) {
-                self.onKeyUp( keyCode, event );
+            onKeyPressed: function (keyCode, event) {
+                self.onKeyDown(keyCode, event);
             }
         }, this);
     },
 
-    setMonsterHp: function(newHp) {
-        this.monster.setMHp(newHp);
-        mainMonsterHp = this.monster.getMHp();
-        this.monsterLabel.setString('HP: '+mainMonsterHp);
+    onKeyDown: function (keyCode, event) {
+        // isAttack
+        if (keyCode == cc.KEY.z) {
+            this.attack();
+        }
+        // sp Attack
+        if (keyCode == cc.KEY.space) {
+            this.spAttack();
+        }
+
+        // update page
+        if (keyCode == cc.KEY.c) {
+            cc.director.runScene(new UpgradeScene());
+        }
+        // sound mute
+        if (keyCode == cc.KEY.m) {
+            if (sound) {
+                this.muteLabel.setString('Mute');
+                cc.audioEngine.setEffectsVolume(0);
+                cc.audioEngine.setMusicVolume(0);
+                sound = false;
+            } else {
+                this.muteLabel.setString('');
+                cc.audioEngine.setEffectsVolume(100);
+                cc.audioEngine.setMusicVolume(100);
+                sound = true;
+            }
+        }
+
+        // hack
+        if (keyCode == cc.KEY.q) {
+            this.heroAttack(1);
+            console.warn("complete attack");
+        }
+        // hack
+        if (keyCode == cc.KEY.h) {
+            upPoint++;
+            console.warn("complete add upPoint");
+        }
+        // hack
+        if (keyCode == cc.KEY.j) {
+            countSuccess += 5;
+            console.warn("complete add 5 sp charge");
+        }
+        if (keyCode == cc.KEY.k) {
+            maxStage += 10;
+            console.warn("complete expend maxStage");
+        }
+
+        // debug code
+        if (keyCode == cc.KEY.s) {
+            firebase.database().ref('/').once('value').then(function (snapshot) {
+                console.info("----------------------------------");
+                console.info(firebase.auth().currentUser.displayName);
+                console.info(firebase.auth().currentUser.email);
+                console.info("----------------------------------");
+                console.info("high stage ever: " + snapshot.val().name + " with " + snapshot.val().stage);
+                console.info("stage: " + stage + "/" + maxStage);
+                console.info("speed: " + Tap.getSpeed());
+                console.info("hero hp: " + Hero.getHp());
+                console.info("hero power: " + Hero.getPower());
+                console.info("hero sp-attack: " + ((Hero.getPower() * (countSuccess - 1)) < 0 ? 0 : (Hero.getPower() * (countSuccess - 1))));
+                console.info("monster hp: " + Monster.getHp());
+                console.info("monster power: " + Monster.getPower());
+                console.info("----------------------------------");
+            });
+
+        }
     },
 
     setHeroHp: function (newHp) {
-        this.hero.setHp(newHp);
-        mainHeroHp = this.hero.getHp();
-        this.heroLabel.setString('HP: '+mainHeroHp);
+        Hero.setHp(newHp);
+        this.heroLabel.setString('HP: ' + Hero.getHp().toFixed(2));
     },
 
-    update: function(dt) {
-        if(this.monster.monsterGetAttackCheck()) {
-            this.monsterGetAttacked();
-        }
-
-        if(this.hero.heroGetAttackCheck()) {
-            this.heroGetAttacked();
-        }
-
-        if (this.tap.speed == 0 && this.tap.closeTo(this.guage)==true) {
-            this.monster.monsterGetAtked();
-        }
-        else if(this.tap.speed == 0 && this.tap.closeTo(this.guage)==false){
-            this.hero.heroGetAtked();
-        }
-
-        if (countSuccess == 5){
-            SPAttackID = 1;
-            this.spLabel.setString('SP charge: MAX!!');
-        }
-
-        if(stage == 13&&this.monster.isDead()){
-            gameClear = true;
-            this.gameOver();
-        }
-
-        if (this.monster.isDead()&& stage < 13) {
-            this.passTheLevel();
-        }
-
-
-        if (this.hero.isDead()) {
-            this.gameOver();
-        }
+    setMonsterHp: function (newHp) {
+        Monster.setHp(newHp);
+        this.monsterLabel.setString('HP: ' + Monster.getHp().toFixed(2));
     },
 
-    attackCommand: function() {
-        this.attack = new cc.MenuItemImage(
-            'res/Mechanic/AttackButton.jpg',
-            'res/Mechanic/AttackButtonPush.jpg',
-            function() {
-                this.shortcutOfAttackButton();
-            }, this);
-        this.attackButton = new cc.Menu (this.attack);
-        this.attackButton.setPosition( new cc.Point (135, 51.5) );
-        this.addChild(this.attackButton);
+    isBoss: function () {
+        return stage % 10 == 0;
     },
 
-    spAttackCommand: function() {
-        this.SPAttack = new cc.MenuItemImage(
-            'res/Mechanic/SPButton.jpg',
-            'res/Mechanic/SPButtonPush.jpg',
-            function() {
-                this.shortcutOfSPAttackButton();
-
-            }, this);
-        this.SPButton = new cc.Menu (this.SPAttack);
-        this.SPButton.setPosition( new cc.Point (402.5, 51.5) );
-        this.addChild(this.SPButton);
-    },
-
-    UpgradeCommand: function() {
-        this.Upgrade = new cc.MenuItemImage(
-            'res/Mechanic/UpgradeButton.jpg',
-            'res/Mechanic/UpgradeButtonPush.jpg',
-            function() {
-                cc.director.runScene(new UpgradeScene());
-            }, this);
-        this.UpgradeButton = new cc.Menu (this.Upgrade);
-        this.UpgradeButton.setPosition( new cc.Point (665, 51.5) );
-        this.addChild(this.UpgradeButton);
-    },
-
-    tapRandom: function() {
-        var random = Math.round(Math.random());
-        var x = 0;
-        if (random == 0)
-            x = 40;
-        else
-            x = 760;
-        this.tap.setPosition(new cc.Point(x ,150));
-    },
-
-    monsterGetAttacked: function() {
-        this.setMonsterHp(mainMonsterHp -= this.hero.getPower());
-        this.heroAttackAni();
-        this.eff1.setOpacity(255);
-        if (monsterHp > 0)
-        cc.audioEngine.playEffect('res/heroSound.mp3');
-
-        this.tapRandom();
-        if (countSuccess < 5 && SPHit == 0) {
-            countSuccess++;
-            this.spLabel.setString('SP charge: ' + countSuccess);
-        }
-
-        if (SPHit > 0) {
-            if ((mainHeroHp +  this.hero.getPower()/2) > heroMaxHp){
-                this.setHeroHp(heroMaxHp);
-            }else {
-                this.setHeroHp(mainHeroHp += this.hero.getPower() / 2);
+    attack: function () {
+        if (tapHere) {
+            this.tap.stop();
+            // hero isAttack
+            if (this.tap.closeTo(this.bar)) {
+                this.heroAttack(1);
+                // monster isAttack
+            } else {
+                this.monsterAttack();
             }
-            SPHit--;
-            this.spHitLabel.setString('SP Hit: '+ SPHit);
+            tapHere = false;
+        } else {
+            this.tap.start();
+            this.returnEffect();
+            tapHere = true;
         }
-        this.tap.run();
     },
 
-    heroGetAttacked: function() {
-        this.setHeroHp(mainHeroHp -= this.monster.getPower());
-        if (SPHit > 0) {
-            SPHit--;
-            this.spHitLabel.setString('SP Hit: '+ SPHit);
+    spAttack: function () {
+        if (countSuccess >= 5) {
+            this.heroAttack(countSuccess - 1);
+            countSuccess = 0;
+            this.spLabel.setString('SP charge: ' + countSuccess);
+
+            this.tap.stop();
+            tapHere = false;
         }
-        this.eff2.setOpacity(255);
-        if (heroHp > 0)
-        cc.audioEngine.playEffect('res/monsterSound.mp3');
-        this.monsterAttackAni();
-        this.tapRandom();
-        this.tap.run();
     },
 
-    passTheLevel:function() {
-        cc.audioEngine.playEffect('res/died.mp3');
-        monsterMaxHp += 10;
-        upPoint += 1;
-        this.setMonsterHp( monsterMaxHp );
-        this.setHeroHp(heroMaxHp);
-        monsterPower+=3;
-        this.monster.setPower(this.monster.getPower());
-        cSpeed = this.tap.getSpeed();
-        if (cSpeed < 0) {
-            cSpeed *= -1;
+    // multiply mean power * multiply to attack monster
+    heroAttack: function (multiply) {
+        this.setMonsterHp(Monster.getHp() - (Hero.getPower() * multiply));
+
+        countSuccess++;
+
+        this.spLabel.setString('SP charge: ' + (countSuccess < 5 ? countSuccess : 'MAX(' + (countSuccess - 4) + ')'));
+
+        if (this.monster.isDead())
+            this.passTheLevel();
+        else
+            cc.audioEngine.playEffect('res/music/heroSound.mp3');
+        this.AttackPos("hero");
+    },
+
+    monsterAttack: function () {
+        this.setHeroHp(Hero.getHp() - Monster.getPower());
+
+        if (countSuccess != 0) {
+            countSuccess--;
         }
-        this.tap.setSpeed(cSpeed + 2);
+
+        this.spLabel.setString('SP charge: ' + (countSuccess < 5 ? countSuccess : 'MAX(' + (countSuccess - 4) + ')'));
+
+        if (this.hero.isDead())
+            this.gameOver();
+        else
+            cc.audioEngine.playEffect('res/music/monsterSound.mp3');
+
+        this.AttackPos("monster");
+    },
+
+    AttackPos: function (who) {
+        if (who == "hero") {
+            this.hero.setPosition(new cc.Point(400, 350));
+            this.eff1.setOpacity(255);
+        } else {
+            this.monster.setPosition(new cc.Point(400, 373));
+            this.eff2.setOpacity(255);
+        }
+    },
+
+    returnEffect: function () {
+        this.hero.setPosition(new cc.Point(200, 350));
+        this.monster.setPosition(new cc.Point(600, 373));
+        this.eff1.setOpacity(0);
+        this.eff2.setOpacity(0);
+    },
+
+    passTheLevel: function () {
+        cc.audioEngine.playEffect('res/music/died.mp3');
         stage++;
-        this.stageLabel.setString('Stage: ' + stage);
-        this.upPointLabel.setString('Upgrade Point: '+upPoint);
+
+        // FEATURE: 18/6/59 update hp (boss) -> 24*stage , (normal) -> 9*stage
+        // FEATURE: 27/6/59 update power (boss) -> 1.2*stage , (normal) -> 0.2*stage
+        // FEATURE: 27/6/59 update upPoint by 3, if it's boss
+        if (this.isBoss()) {
+            upPoint += 3;
+            this.setMonsterHp(monsterHpDefault + (24 * stage));
+            Monster.setPower(monsterPowerDefault + (1.2 * stage));
+            maxStage += 10;
+        } else {
+            upPoint += 1;
+            this.setMonsterHp(monsterHpDefault + (9 * stage));
+            Monster.setPower(monsterPowerDefault + (0.2 * stage));
+        }
+
+        // expend max level to 50
+        if (stage > maxStage) {
+            this.gameOver();
+        }
+
+        this.stageLabel.setString('Stage: ' + (stage % 10 == 0 ? 'Boss(' + stage / 10 + ')!' : stage));
+        this.upPointLabel.setString('Upgrade Point: ' + upPoint);
     },
 
-    gameOver:function() {
-        cc.audioEngine.playEffect('res/died.mp3');
-        heroMaxHp = 100;
-        monsterMaxHp = 50;
-        this.setHeroHp(heroMaxHp);
-        this.setMonsterHp(monsterMaxHp);
-        this.hero.setPower(10);
-        this.monster.setPower(7);
-        this.tap.setSpeed(defaultSpeed);
-        countSuccess = 0;
-        upPoint = 0;
-        cSpeed = 3;
-        SPHit = 0;
-        this.stageLabel.setString('Stage: '+ stage);
+    gameOver: function () {
+        cc.audioEngine.playEffect('res/music/died.mp3');
+
+        this.hero.resetHp();
+        this.hero.resetPower();
+        this.monster.resetHp();
+        this.monster.resetPower();
+
+        this.tap.stop();
+        this.tap.resetSpeed();
+
+        this.stageLabel.setString('Stage: ' + stage);
         this.spLabel.setString('SP charge: ' + countSuccess);
-        this.upPointLabel.setString('Upgrade Point: '+upPoint);
-        this.spHitLabel.setString('SP Hit: '+ SPHit);
-        hpUpgrade = 0;
-        powerUpgrade = 0;
+        this.upPointLabel.setString('Upgrade Point: ' + upPoint);
+
         cc.director.runScene(new GameOverScene());
     },
 
-    createGuage: function() {
-        this.guage = new Guage();
-        this.guage.setPosition(new cc.Point(400,150));
-        this.addChild(this.guage);
+    spAttackButton: function () {
+        const spAttack = new cc.MenuItemImage(
+            'res/Mechanic/SPAttackBtn.jpg',
+            'res/Mechanic/SPAttackBtn_push.jpg',
+            function () {
+                this.spAttack();
+            }, this);
+        this.SPButton = new cc.Menu(spAttack);
+        this.SPButton.setPosition(new cc.Point(screenWidth * 0.25, 51.5));
+        this.addChild(this.SPButton);
     },
-    createBg: function() {
+
+    upgradeButton: function () {
+        const upgrade = new cc.MenuItemImage(
+            'res/Mechanic/UpgradeBtn.jpg',
+            'res/Mechanic/UpgradeBtn_push.jpg',
+            function () {
+                tapHere = false;
+                cc.director.runScene(new UpgradeScene());
+            }, this);
+        this.UpgradeButton = new cc.Menu(upgrade);
+        this.UpgradeButton.setPosition(new cc.Point(screenWidth * 0.75, 51.5));
+        this.addChild(this.UpgradeButton);
+    },
+
+    createBar: function () {
+        this.bar = new Guage();
+        this.bar.setPosition(new cc.Point(screenWidth * 0.5, 150));
+        this.addChild(this.bar);
+    },
+
+    createBg: function () {
         this.bg = new Bg();
         this.bg.setPosition(new cc.Point(400, 420));
-        this.addChild(this.bg,0);
+        this.addChild(this.bg, 0);
     },
 
-    createTap: function() {
+    createTap: function () {
         this.tap = new Tap();
         this.tap.setOpacity(0);
-        this.tapRandom();
+        this.tap.rePos();
         this.addChild(this.tap);
-        this.tap.scheduleUpdate();
     },
 
-    createCharacter: function() {
+    createCharacter: function () {
         this.hero = new Hero();
         this.monster = new Monster();
         this.addChild(this.hero);
         this.addChild(this.monster);
-        mainHeroHp  = this.hero.getHp();
-        mainMonsterHp = this.monster.getMHp();
-        this.monster.setPosition(new cc.Point (600,373));
-        this.hero.setPosition(new cc.Point(200,350));
+        // set position
+        this.monster.setPosition(new cc.Point(600, 373));
+        this.hero.setPosition(new cc.Point(200, 350));
     },
 
-    createHeroLabel: function(){
-        this.heroLabel = cc.LabelTTF.create( 'HP: '+mainHeroHp, 'Arial', 40 );
-        this.heroLabel.setPosition( new cc.Point( 200, 500 ) );
-        this.addChild(this.heroLabel);
-    },
-
-    createMonsterLabel: function() {
-        this.monsterLabel = cc.LabelTTF.create( 'HP: '+mainMonsterHp, 'Arial', 40 );
-        this.monsterLabel.setPosition( new cc.Point( 600, 500 ) );
-        this.addChild(this.monsterLabel);
-    },
-
-    createStageLabel: function(){
-        this.stageLabel = cc.LabelTTF.create( 'Stage: '+stage, 'Arial', 30 );
-        this.stageLabel.setPosition( new cc.Point( 400, 550 ) );
+    createStageLabel: function () {
+        this.stageLabel = cc.LabelTTF.create('Stage: ' + stage, 'Arial', 30);
+        this.stageLabel.setPosition(new cc.Point(screenWidth * 0.5, 550));
         this.addChild(this.stageLabel);
     },
 
-    createSPLabel: function() {
-        this.spLabel = cc.LabelTTF.create( 'SP charge: '+countSuccess, 'Arial', 30 );
-        this.spLabel.setPosition( new cc.Point( 150, 220 ) );
-        this.addChild(this.spLabel);
-    },
-    createSPHitLabel: function() {
-        this.spHitLabel = cc.LabelTTF.create( 'SP Hit: '+SPHit, 'Arial', 30 );
-        this.spHitLabel.setPosition( new cc.Point( 400, 220 ) );
-        this.addChild(this.spHitLabel);
+    createHeroLabel: function () {
+        this.heroLabel = cc.LabelTTF.create('HP: ' + Hero.getHp().toFixed(2), 'Arial', 40);
+        this.heroLabel.setPosition(new cc.Point(screenWidth * 0.25, 500));
+        this.addChild(this.heroLabel);
     },
 
-    createUpgradePointLabel: function() {
-        this.upPointLabel = cc.LabelTTF.create( 'Upgrade Point: '+upPoint, 'Arial', 30 );
-        this.upPointLabel.setPosition( new cc.Point( 650, 220 ) );
+    createMonsterLabel: function () {
+        this.monsterLabel = cc.LabelTTF.create('HP: ' + Monster.getHp().toFixed(2), 'Arial', 40);
+        this.monsterLabel.setPosition(new cc.Point(screenWidth * 0.75, 500));
+        this.addChild(this.monsterLabel);
+    },
+
+    createSPLabel: function () {
+        this.spLabel = cc.LabelTTF.create('SP charge: ' + (countSuccess < 5 ? countSuccess : 'MAX(' + (countSuccess - 4) + ')'), 'Arial', 30);
+        this.spLabel.setPosition(new cc.Point(screenWidth * 0.25, 220));
+        this.addChild(this.spLabel);
+    },
+
+    createUpgradePointLabel: function () {
+        this.upPointLabel = cc.LabelTTF.create('Upgrade Point: ' + upPoint, 'Arial', 30);
+        this.upPointLabel.setPosition(new cc.Point(screenWidth * 0.75, 220));
         this.addChild(this.upPointLabel);
     },
 
-    attackFn: function() {
-        this.tap.setOpacity(0);
-        attackID = 0;
-        if (this.tap.speed == 0){
-            this.tap.run();
-        }else {
-            this.tap.stop();
-        }
+    createMuteLabel: function () {
+        this.muteLabel = cc.LabelTTF.create(sound ? '' : 'Mute', 'Arial', 20);
+        this.muteLabel.setPosition(new cc.Point(screenWidth - 50, screenHeight - 50));
+        this.muteLabel.setColor(cc.color(255, 0, 0));
+        this.addChild(this.muteLabel);
     },
 
-    shortcutOfAttackButton: function() {
-        this.tap.setOpacity(255);
-        attackID = 1;
-        this.hero.setPosition(new cc.Point(200,350));
-        this.monster.setPosition(new cc.Point (600,373));
-        this.eff1.setOpacity(0);
-        this.eff2.setOpacity(0);
+    createPlayerNameLabel: function () {
+        var user = firebase.auth().currentUser;
+        this.nameLabel = cc.LabelTTF.create(user.displayName, 'Arial', 20);
+        this.nameLabel.setPosition(new cc.Point(100, screenHeight - 50));
+        this.addChild(this.nameLabel);
     },
 
-    shortcutOfSPAttackButton: function(){
-        SPHit = 3;
-        this.tap.runAction(cc.FadeIn.create(0));
-        attackID = 1;
-        SPAttackID = 0;
-        countSuccess = 0;
-        this.spLabel.setString('SP charge: '+countSuccess);
-        this.spHitLabel.setString('SP Hit: '+ SPHit);
-        this.hero.setPosition(new cc.Point(200,350));
-        this.monster.setPosition(new cc.Point (600,373));
-        this.eff1.setOpacity(0);
-        this.eff2.setOpacity(0);
-    },
-    
-    heroAttackAni: function() {
-        this.hero.setPosition(new cc.Point(400,350));
-    },
-
-    monsterAttackAni: function () {
-        this.monster.setPosition(new cc.Point(400,373));
-    },
-    
-    heroAttackEffect: function () {
+    createHeroEffect: function () {
         this.eff1 = new Effect();
-        this.eff1.setPosition(new cc.Point(500,350));
+        this.eff1.setPosition(new cc.Point(500, 350));
         this.eff1.setOpacity(0);
         this.addChild(this.eff1);
     },
 
-    monsterAttackEffect: function () {
+    createMonsterEffect: function () {
         this.eff2 = new Effect();
-        this.eff2.setPosition(new cc.Point(300,350));
+        this.eff2.setPosition(new cc.Point(300, 350));
         this.eff2.setOpacity(0);
         this.addChild(this.eff2);
-    },
-
-});
-
-var StartScene = cc.Scene.extend({
-    onEnter: function() {
-        this._super();
-        var layer = new GameLayer();
-        layer.init();
-        this.addChild( layer );
     }
 });
 
-var heroMaxHp = 100;
-var monsterMaxHp = 50;
-var mainHeroHp = 0;
-var mainMonsterHp = 0;
+var StartScene = cc.Scene.extend({
+    onEnter: function () {
+        this._super();
+        var layer = new GameLayer();
+        layer.init();
+        this.addChild(layer);
+    }
+});
+
+// variable
 var stage = 1;
-var attackID = 0;
-var SPAttackID = 0;
-var SPHit = 0;
+var maxStage = 10;
+// default value
+var heroHpDefault = 100;
+var heroPowerDefault = 15;
+var monsterHpDefault = 30;
+var monsterPowerDefault = 3;
+// update point
 var upPoint = 0;
+// charge attack
 var countSuccess = 0;
-var cSpeed = 3;
-var gameClear = false;
+// object speed
+var tSpeed = 1;
+// 'attack button' tapHere, true = tap is appear; otherwise tap disappear
+var tapHere = false;
+// is sound or mute
+var sound = true;

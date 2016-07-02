@@ -1,39 +1,38 @@
 var Hero = cc.Sprite.extend({
-    var: heroHp = 100,
-    var: heroPower = 10,
-    var: checkHAtk = 0,
-    ctor: function() {
+    var: heroHp = heroHpDefault,
+    var: heroPower = heroPowerDefault,
+
+    ctor: function () {
         this._super();
         this.initWithFile('res/Character/char1.png');
 
     },
-    getHp: function() {
-        return heroHp;
-    },
-    setHp: function(newHp) {
-        heroHp = newHp;
 
+    resetHp: function () {
+        heroHp = heroHpDefault;
     },
-    getPower: function () {
-        return heroPower;
+
+    resetPower: function () {
+        heroPower = heroPowerDefault;
     },
-    setPower: function(newPower) {
-        heroPower = newPower;
-    },
-    heroGetAttackCheck: function() {
-        if (checkHAtk==1){
-            checkHAtk = 0;
-            return true;
-        } else {
-            return false;
-        }
-    },
-    heroGetAtked: function() {
-        checkHAtk = 1;
-    },
-    isDead: function() {
-        if (heroHp<=0)
-            return true;
-        else false;
+
+    isDead: function () {
+        return heroHp <= 0;
     }
 });
+
+Hero.getHp = function () {
+    return Number(heroHp);
+};
+
+Hero.setHp = function (newHp) {
+    heroHp = Number(newHp);
+};
+
+Hero.getPower = function () {
+    return Number(heroPower);
+};
+
+Hero.setPower = function (newPower) {
+    heroPower = Number(newPower);
+};

@@ -1,58 +1,100 @@
+//noinspection JSDuplicatedDeclaration
 var Tap = cc.Sprite.extend({
-    var: startSpeed = 0,
-    var: defaultSpeed = 5,
-    ctor: function() {
+    var: timer = 0,
+    var: speed = 0,
+    var: decrease = 0,
+
+    ctor: function () {
         this._super();
         this.initWithFile('res/Mechanic/tap.png');
-        if (cSpeed < 0) {
-            cSpeed *= -1;
-        }
-        this.speed = cSpeed+2;
 
+        this.setSpeed();
     },
-    update: function(dt) {
+
+    update: function (dt) {
+        if (timer != 0) {
+            timer++;
+            if (timer % 60 == 0) {
+                // FEATURE: 19/6/59 add speed for 0.7 in every second
+                if (speed > 0)
+                    speed += 0.07;
+                else
+                    speed -= 0.07;
+            }
+        }
         var pos = this.getPosition();
         if (pos.x <= 20) {
-            this.speed *= -1;
+            speed *= -1;
         } else if (pos.x >= 780) {
-            this.speed *= -1;
+            speed *= -1;
         }
-        this.setPosition(new cc.Point(pos.x + this.speed, pos.y));
+        this.setPosition(new cc.Point(pos.x + speed, pos.y));
+    },
 
+    stop: function () {
+        // hide the tap
+        this.setOpacity(0);
+        // un-update
+        this.unscheduleUpdate()
     },
-    stop: function() {
-        startSpeed = this.speed;
-        this.speed = 0;
+
+    isStop: function () {
+        timer = 0;
+        return (this.getOpacity() == 0) && (speed == 0);
     },
-    run: function() {
-        this.setStartSpeed();
-        this.speed = startSpeed;
+
+    start: function () {
+        timer = 1;
+        this.rePos();
+        this.setOpacity(255);
+        this.setSpeed();
+        this.setStartPos();
+        this.scheduleUpdate();
     },
+
     closeTo: function (obj) {
-        var myPos = this.getPosition();
-        var oPos = obj.getPosition();
-        if (( ( Math.abs(myPos.x - oPos.x) <= 10 ) &&
-        ( Math.abs(myPos.y - oPos.y) <= 20 ) )){
-            return true;
-        } else {
-            return false;
+        var myPos = this.getPositionX();
+        var oPos = obj.getPositionX();
+        return (Math.abs(myPos - oPos) <= 15);
+    },
+
+    /**
+     * set by using state and tSpeed
+     */
+    setSpeed: function () {
+        // FEATURE: 18/6/59 increase speed every stage by 1
+        speed = tSpeed + stage;
+        speed = Math.abs(speed) - decrease;
+    },
+
+    resetSpeed: function () {
+        speed = 0;
+        decrease = 0;
+    },
+
+    rePos: function () {
+        var random = Math.round(Math.random() * 760);
+        while (random <= 40) {
+            random = Math.round(Math.random() * 760);
         }
+        this.setPosition(new cc.Point(random, 150));
     },
-    setSpeed: function (newSpeed) {
-        this.speed = newSpeed;
-    },
-    getSpeed: function () {
-        return this.speed;
-    },
-    rePosition: function() {
-        this.tap.setPosition(new cc.Point(40,150));
-    },
-    setStartSpeed: function() {
-        var random = Math.round(Math.random());
+
+    setStartPos: function () {
+
+        var random = Math.round(Math.random() * 2);
         if (random == 0) {
-            startSpeed *= -1;
+            speed *= -1;
         }
     }
-
-
 });
+
+// create static method
+Tap.decreaseSpeed = function () {
+    speed = Math.abs(speed) - 2;
+    decrease = speedUpgrade * 2;
+};
+
+Tap.getSpeed = function () {
+    return Math.abs(speed).toFixed(2);
+};

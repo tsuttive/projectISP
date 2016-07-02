@@ -78,7 +78,7 @@ ccui.WebView = ccui.Widget.extend(/** @lends ccui.WebView# */{
      * Determine whether to go back
      */
     canGoBack: function(){
-        cc.log("Web does not support query history");
+        cc.log("Web does not support query historyData");
         return true;
     },
 
@@ -86,7 +86,7 @@ ccui.WebView = ccui.Widget.extend(/** @lends ccui.WebView# */{
      * Determine whether to go forward
      */
     canGoForward: function(){
-        cc.log("Web does not support query history");
+        cc.log("Web does not support query historyData");
         return true;
     },
 

@@ -51,27 +51,85 @@
  }
  *
  */
-var width = 800;
-var height = 600;
-cc.game.onStart = function(){
-    if(!cc.sys.isNative && document.getElementById("cocosLoading")) //If referenced loading.js, please remove it
+var screenWidth = 800;
+var screenHeight = 600;
+var browser = '';
+
+cc.game.onStart = function () {
+    if (!cc.sys.isNative && document.getElementById("cocosLoading")) //If referenced loading.js, please remove it
         document.body.removeChild(document.getElementById("cocosLoading"));
 
     // Pass true to enable retina display, on Android disabled by default to improve performance
-    cc.view.enableRetina(cc.sys.os === cc.sys.OS_IOS ? true : false);
+    cc.view.enableRetina(cc.sys.os === cc.sys.OS_IOS);
     // Adjust viewport meta
     cc.view.adjustViewPort(true);
     // Setup the resolution policy and design resolution size
-    cc.view.setDesignResolutionSize(800, 600, cc.ResolutionPolicy.SHOW_ALL);
+    cc.view.setDesignResolutionSize(screenWidth, screenHeight, cc.ResolutionPolicy.SHOW_ALL);
     // Instead of set design resolution, you can also set the real pixel resolution size
     // Uncomment the following line and delete the previous line.
     // cc.view.setRealPixelResolution(960, 640, cc.ResolutionPolicy.SHOW_ALL);
     // The game will be resized when browser size change
     cc.view.resizeWithBrowserSize(true);
     //load resources
-    cc.audioEngine.playMusic("res/Night.mp3",true);
+    // check safari can't play sound
+    if (browser != 'Safari') {
+        console.log("sound");
+        cc.audioEngine.playMusic("res/music/Night.mp3", true); // may not support in safari
+    }
     cc.LoaderScene.preload(g_resources, function () {
         cc.director.runScene(new TitleScene);
     }, this);
+
 };
+
 cc.game.run();
+
+var checkBrowser = function () {
+    var nu = navigator.userAgent;
+    if ((nu.indexOf("Opera") || nu.indexOf('OPR')) != -1) {
+        browser = 'Opera';
+        return true;
+    } else if (nu.indexOf("Chrome") != -1) {
+        browser = 'Chrome';
+        return true;
+    } else if (nu.indexOf("Safari") != -1) {
+        browser = 'Safari';
+        return false;
+    } else if (nu.indexOf("Firefox") != -1) {
+        browser = 'Firefox';
+        return true;
+    } else if ((nu.indexOf("MSIE") != -1 ) || (!!document.documentMode == true )) {
+        browser = 'IE';
+        return true;
+    } else {
+        browser = 'unknown';
+        alert('unknown');
+    }
+};
+
+var myIP = function (getText) {
+    if (window.XMLHttpRequest) xmlhttp = new XMLHttpRequest();
+    else xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+
+    xmlhttp.open("GET", "//ip-api.com/json?callback=?", false);
+    xmlhttp.send();
+
+    var text = xmlhttp.responseText;
+    text = text.slice(3, text.length - 3);
+
+    hostipInfo = text.split(",");
+    for (var i = 0; i < hostipInfo.length; i++) {
+        while (hostipInfo[i].indexOf("\"") != -1) {
+            hostipInfo[i] = hostipInfo[i].replace("\"", "");
+        }
+    }
+
+    for (i = 0; hostipInfo.length >= i; i++) {
+        ipAddress = hostipInfo[i].split(":");
+        if (ipAddress[0] == getText) {
+            return ipAddress[1].replace(" ", "");
+        }
+    }
+
+    return false;
+};
