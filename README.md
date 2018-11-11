@@ -1,6 +1,6 @@
-# Renovate program #
+# Renovate Program #
 
-I start to renovate my friend game because i see when he present his game, it's sound fun but he don't done this game project so I like to renovate it by the way I like.
+I started to renovate my friend's game because it looked fun when he was playing it. Unfortunately, he no longer works on the project so I renovated the game to the way I wanted it to be.
 
 ### How to install ###
  1) Install `python` in your computer.
@@ -22,8 +22,8 @@ I start to renovate my friend game because i see when he present his game, it's 
 
 ### What is this repository for? ###
 
-- make game in the way of me.
+- To make the game in my own way.
 
-### Who done this project? ###
+### Who made this project? ###
 
 - *Kamontat*
